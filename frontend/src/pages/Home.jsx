@@ -6,7 +6,9 @@ import AboutSection from '../layout/AboutSection.jsx'
 import ProjectSection from '../layout/ProjectSection.jsx'
 import SkillsSection from '../layout/SkillsSection.jsx'
 import ContactSection from '../layout/ContactSection.jsx'
-
+import ExperienceSection from '../layout/ExprienceSection.jsx'
+import CertificationsSection from '../layout/CertificationsSection.jsx'
+import NotesSection from '../layout/NotesSection.jsx'
 function Home() {
   return (
     <div className="bg-white min-h-screen relative overflow-hidden">
@@ -17,8 +19,14 @@ function Home() {
         <Hero />
 
         <AboutSection />
+
+
         <SkillsSection />
+
         <ProjectSection />
+        <ExperienceSection/>
+        <CertificationsSection/>
+        <NotesSection />
         <ContactSection />
       </div>
     </div>

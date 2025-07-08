@@ -40,10 +40,20 @@ const Hero_casual = () => {
                 Let’s talk about creating value — through code, systems, and resilience.
               </p>
               <div className="mt-6 flex gap-4">
-                <button className="px-6 py-2 bg-purple-600 hover:bg-purple-700 transition-all duration-300 rounded-lg text-white shadow-md">
+                <button
+                  className="px-6 py-2 bg-purple-600 hover:bg-purple-700 transition-all duration-300 rounded-lg text-white shadow-md"
+                  onClick={() => {
+                    document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                >
                   View Projects
                 </button>
-                <button className="px-6 py-2 border border-white hover:bg-white hover:text-black transition-all duration-300 rounded-lg text-white">
+                <button
+                  className="px-6 py-2 border border-gray-300 hover:bg-purple-200 hover:text-purple-800 transition-all duration-300 rounded-lg text-purple-600"
+                  onClick={() => {
+                    document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                >
                   Contact Me
                 </button>
               </div>

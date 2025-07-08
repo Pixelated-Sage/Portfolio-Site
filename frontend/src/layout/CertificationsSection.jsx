@@ -1,78 +1,88 @@
 import React from "react";
-
+import PythonCert from "../assets/certs/python.jpg";
+import AimlCert from "../assets/certs/aiml.jpg"
+import Git from "../assets/certs/git.jpg";
+import Ml from "../assets/certs/ml.jpg";
+import Pandas from "../assets/certs/pandas.jpg";
+import PowerBi from "../assets/certs/powerbi.jpg";
+import Frontend from "../assets/certs/Frontend.png";
+import Django from "../assets/certs/Django.jpg"
+import Machine from "../assets/certs/Machine.jpg"
 const certifications = [
+	{
+		title: "Python Basics",
+		issuer: "HackerRank",
+		year: "2024",
+		logo: PythonCert,
+	},
+	{
+		title: "Pandas",
+		issuer: "Kaggle",
+		year: "2024",
+		logo: Pandas,
+	},
+	{
+		title: "Git & GitHub",
+		issuer: "Geekster",
+		year: "2024",
+		logo: Git,
+	},
   {
-    title: "Python Basics",
-    issuer: "HackerRank",
-    year: "2024",
-    logo: "/assets/certs/python.jpg",
-  },
+		title: "Frontend Development",
+		issuer: "SVIET College",
+		year: "2024",
+		logo: Frontend,
+	},
   {
-    title: "Pandas",
-    issuer: "Kaggle",
-    year: "2024",
-    logo: "/assets/certs/pandas.jpg",
-  },
+		title: "Machine Learning Fundamentals",
+		issuer: "SVIET College",
+		year: "2024",
+		logo: Machine,
+	},
   {
-    title: "Git & GitHub",
-    issuer: "Geekster",
-    year: "2024",
-    logo: "/assets/certs/git.jpg",
-  },
-  {
-    title: "Power BI",
-    issuer: "OfficeMaster",
-    year: "2024",
-    logo: "/assets/certs/powerbi.jpg",
-  },
-  {
-    title: "AI/ML Fundamentals",
-    issuer: "Infosys",
-    year: "2024",
-    logo: "/assets/certs/aiml.jpg",
-  },
-  {
-    title: "Intro to ML",
-    issuer: "Infosys",
-    year: "2024",
-    logo: "/assets/certs/ml.jpg",
-  },
-  {
-    title: "Super 60 Coordinator",
-    issuer: "Your College",
-    year: "2024",
-    logo: "/assets/certs/super60.jpg",
-  },
+		title: "Django",
+		issuer: "Udemy",
+		year: "2025",
+		logo: Django,
+	},
 ];
 
 const CertificationsSection = () => {
-  return (
-    <section className="w-full py-20 px-6 md:px-20 bg-gradient-to-b from-black to-gray-900 text-white">
-      <h2 className="text-4xl md:text-5xl font-bold text-center mb-12">
-        🎓 Certifications & Achievements
-      </h2>
+	return (
+		<section className="w-full py-20 px-6 md:px-20 bg-white text-black">
+			<h2 className="text-4xl md:text-5xl font-bold text-center mb-16">
+				Certifications & Achievements
+			</h2>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-        {certifications.map((cert, index) => (
-          <div
-            key={index}
-            className="group relative p-6 bg-white/5 border border-white/10 rounded-2xl backdrop-blur-md shadow-lg hover:scale-105 hover:shadow-2xl transition-all duration-300"
-          >
-            <img
-              src={cert.logo}
-              alt={cert.title}
-              className="w-16 h-16 mb-4 object-contain"
-            />
-            <h3 className="text-xl font-semibold text-purple-300 mb-1">
-              {cert.title}
-            </h3>
-            <p className="text-gray-300">{cert.issuer}</p>
-            <p className="text-sm text-gray-500 mt-2">{cert.year}</p>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
+			<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 max-w-7xl mx-auto">
+				{certifications.map((cert, index) => (
+					<div
+						key={index}
+						className="group relative bg-white/80 border border-gray-200 rounded-2xl p-4 backdrop-blur-md shadow-md hover:shadow-xl transition-all duration-300 flex flex-col items-center"
+					>
+						{/* Certificate Image (full certificate, not logo) */}
+						<div className="w-full flex justify-center">
+							<img
+								src={cert.logo}
+								alt={cert.title}
+								className="w-full h-56 object-contain rounded-xl border-2 border-purple-200 shadow mb-4 bg-white"
+							/>
+						</div>
+						{/* Content below image */}
+						<h3 className="text-lg font-semibold text-purple-800 text-center mt-2">
+							{cert.title}
+						</h3>
+						<p className="text-sm text-gray-600 text-center">
+							{cert.issuer}
+						</p>
+						<p className="text-xs text-gray-500 text-center mt-1">
+							{cert.year}
+						</p>
+					</div>
+				))}
+			</div>
+		</section>
+	);
 };
 
 export default CertificationsSection;

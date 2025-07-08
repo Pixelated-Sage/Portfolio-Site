@@ -1,49 +1,92 @@
-// components/Skills/SkillsSection.jsx
-import React from "react";
-import SkillCard from "../components/Skills/SkillCard";
+import React from 'react';
+import { Code, Database, Palette, Users, Brain } from 'lucide-react';
 
-const skills = [
-  { name: "Python", icon: "/src/assets/icons/python.svg" },
-  { name: "C++", icon: "/src/assets/icons/cplusplus.svg" },
-  { name: "React.js", icon: "/src/assets/icons/react.svg" },
-  { name: "TensorFlow", icon: "/src/assets/icons/tensorflow.svg" },
-  { name: "Pandas", icon: "/src/assets/icons/pandas.svg" },
-  { name: "Git & GitHub", icon: "/src/assets/icons/github.svg" },
-  { name: "Power BI", icon: "/src/assets/icons/powers.svg" },
-  { name: "Linux", icon: "/src/assets/icons/linux.svg" },
-];
+const SkillSection = () => {
+  const skillCategories = [
+    {
+      title: 'Frontend Development',
+      icon: <Code className="w-6 h-6" />,
+      skills: [
+        'HTML', 'CSS', 'Tailwind CSS', 'JavaScript', 'React.js', 'Vite', 'GSAP', 'Firebase (Basics)',
+        'Figma (UI Design)'
+      ]
+    },
+    {
+      title: 'Backend & Systems',
+      icon: <Database className="w-6 h-6" />,
+      skills: [
+        'Python', 'C++','Java (Basics)', 'SQL (Basics)', 'Django', 'Django REST Framework',
+        'PostgreSQL (Learning)', 'Git', 'GitHub', 'Linux (Fedora)', 'Bash CLI'
+      ]
+    },
+    {
+      title: 'AI, ML & Data',
+      icon: <Brain className="w-6 h-6" />,
+      skills: [
+        'NumPy', 'Pandas', 'Matplotlib', 'Seaborn (Learning)',
+        'llama.cpp (LLM Inference)', 'GGUF Models', 'Prompt Engineering',
+        'Local LLM Setup (Mistral-7B)', 'CUDA Toolchain (Basic)',
+        'Memory Logs System (CLI Chat)'
+      ]
+    },
+    {
+      title: 'Design & Creative Tools',
+      icon: <Palette className="w-6 h-6" />,
+      skills: [
+        'Canva', 'Photoshop', 'Illustrator', 'Premiere Pro (Basics)'
+      ]
+    },
+    {
+      title: 'Soft Skills & Leadership',
+      icon: <Users className="w-6 h-6" />,
+      skills: [
+        'Team Coordination', 'Public Speaking', 'Event Management',
+        'Motivation & Initiative', 'Communication', 'Discipline'
+      ]
+    }
+  ];
 
-const SkillsSection = () => {
   return (
-    <section className="relative w-full py-20 overflow-hidden">
-      {/* Meteor Shower Background */}
-      <div className="absolute inset-0 overflow-hidden">
-        {Array.from({ length: 20 }).map((_, i) => (
-          <div
-            key={i}
-            className="meteor-shower"
-            style={{
-              '--delay': `${Math.random() * 10}s`,
-              '--top': `${Math.random() * 100}%`,
-              '--left': `${Math.random() * 100}%`,
-            }}
-          />
-        ))}
+    <section className="py-16 px-4 w-full ">
+      <div className="text-center mb-12">
+        <h2 className="text-4xl font-bold text-gray-900 mb-4">
+          Skills & Expertise
+        </h2>
+        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          I’m a builder by nature — from intelligent tools to visual web experiences. I work across the stack, love clean UI, and dive deep into AI & automation using Python. Here’s what I’m good at and still mastering.
+        </p>
       </div>
 
-      <div className="relative max-w-5xl mx-auto px-4">
-        <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 bg-clip-text text-transparent bg-gradient-to-r from-purple-600 via-pink-500 to-blue-600">
-          🛠️ Skills & Tools
-        </h2>
-
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-          {skills.map((skill) => (
-            <SkillCard key={skill.name} icon={skill.icon} name={skill.name} />
-          ))}
-        </div>
+      <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 w-[70%] mx-auto ">
+        {skillCategories.map((category, index) => (
+          <div
+            key={index}
+            className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100"
+          >
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-2 bg-blue-100 rounded-lg text-blue-600">
+                {category.icon}
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900">
+                {category.title}
+              </h3>
+            </div>
+            
+            <div className="flex flex-wrap gap-2">
+              {category.skills.map((skill, skillIndex) => (
+                <span
+                  key={skillIndex}
+                  className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200 transition-colors duration-200"
+                >
+                  {skill}
+                </span>
+              ))}
+            </div>
+          </div>
+        ))}
       </div>
     </section>
   );
 };
 
-export default SkillsSection;
+export default SkillSection;
