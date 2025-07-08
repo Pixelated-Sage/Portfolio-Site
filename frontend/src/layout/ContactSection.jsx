@@ -13,7 +13,7 @@ const ContactSection = () => {
 
         <div className="flex justify-center items-center gap-6 flex-wrap">
           <a
-            href="mailto:youremail@example.com"
+            href="mailto:thepixelatedsage@gmail.com"
             className="flex items-center gap-2 text-gray-800 hover:text-purple-700 transition"
           >
             <Mail size={20} />
@@ -30,7 +30,7 @@ const ContactSection = () => {
           </a>
 
           <a
-            href="https://linkedin.com/in/yourprofile"
+            href="https://www.linkedin.com/in/abhishek-sharma-080b2530b/"
             target="_blank"
             className="flex items-center gap-2 text-gray-800 hover:text-purple-700 transition"
           >
