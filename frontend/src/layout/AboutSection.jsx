@@ -5,7 +5,7 @@ import thinkingAnimation from "../assets/lottie/thingking.json";
 const AboutSection = () => {
   return (
     <section className="w-full flex justify-center items-center py-10 sm:py-20 px-4 bg-white">
-      <div className="w-full sm:w-[90%] md:w-[80%] max-w-[1920px] bg-white/90 rounded-2xl shadow-2xl border border-gray-200 backdrop-blur-lg flex flex-col md:flex-row items-center p-6 sm:p-10 md:p-12 gap-10 sm:gap-12">
+      <div className="w-full sm:w-[90%] md:w-[80%] max-w-[1920px] bg-white/90 rounded-2xl shadow-2xl border border-gray-200 backdrop-blur-lg flex flex-col-reverse md:flex-row items-center p-6 sm:p-10 md:p-12 gap-10 sm:gap-12">
         {/* Left: Content (80%) */}
         <div className="w-full md:flex-[8] flex flex-col justify-center items-start text-left">
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4 sm:mb-6">About Me</h2>
@@ -40,7 +40,7 @@ const AboutSection = () => {
         </div>
 
         {/* Right: Lottie Animation (20%) */}
-        <div className="w-full md:flex-[2] flex  justify-center items-center">
+        <div className="w-full md:flex-[2] flex justify-center items-center mb-8 md:mb-0">
           <Lottie
             animationData={thinkingAnimation}
             loop

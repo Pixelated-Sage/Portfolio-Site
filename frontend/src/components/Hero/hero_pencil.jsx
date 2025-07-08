@@ -62,7 +62,7 @@ const Hero_pencil = () => {
               <img
                 src={image}
                 alt="Abhishek headshot"
-                className="w-64 h-86 sm:h-full sm:w-auto object-cover rounded-xl shadow-lg"
+                className="w-64 h-86 sm:h-178 sm:w-auto object-cover rounded-xl shadow-lg"
               />
             </div>
           </div>
