@@ -12,40 +12,28 @@ const experienceList = [
       "Developed core skills in event organization, team communication, and student-led collaboration.",
     ],
   },
-  // Add more roles below as needed
-  /*
-  {
-    role: "Frontend Intern – XYZ Startup",
-    duration: "May 2024 – Aug 2024",
-    location: "Remote",
-    points: [
-      "Built responsive components in React with TailwindCSS.",
-      "Contributed to scalable UI workflows with Git & API integrations.",
-    ],
-  },
-  */
 ];
 
 const ExperienceSection = () => {
   return (
-    <section className="w-full py-20 px-6 md:px-20 bg-white text-black">
-      <h2 className="text-4xl md:text-5xl font-bold text-center mb-12">
+    <section className="w-full py-12 sm:py-20 px-4 sm:px-6 md:px-20 bg-white text-black">
+      <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-10 sm:mb-12">
         Experience & Roles
       </h2>
 
-      <div className="max-w-4xl mx-auto space-y-10">
+      <div className="max-w-3xl sm:max-w-4xl mx-auto space-y-6 sm:space-y-10">
         {experienceList.map((exp, idx) => (
           <div
             key={idx}
-            className="bg-white border border-gray-200 p-6 rounded-xl shadow-lg"
+            className="bg-white border border-gray-200 p-5 sm:p-6 rounded-xl shadow-md sm:shadow-lg"
           >
-            <h3 className="text-2xl font-semibold text-purple-800 mb-1">
+            <h3 className="text-xl sm:text-2xl font-semibold text-purple-800 mb-2">
               {exp.role}
             </h3>
-            <p className="text-sm text-gray-600 mb-2">
+            <p className="text-xs sm:text-sm text-gray-600 mb-3">
               {exp.duration} | {exp.location}
             </p>
-            <ul className="list-disc pl-6 text-gray-700 space-y-2">
+            <ul className="list-disc pl-5 sm:pl-6 text-sm sm:text-base text-gray-700 space-y-2">
               {exp.points.map((point, i) => (
                 <li key={i}>{point}</li>
               ))}

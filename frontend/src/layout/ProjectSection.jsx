@@ -1,7 +1,8 @@
 import React from "react";
 import LLM from "../assets/projectimg/llm.webp";
 import ERP from "../assets/projectimg/erp.webp";
-import Portfolio from "../assets/projectimg/portfolio.webp"
+import Portfolio from "../assets/projectimg/portfolio.webp";
+
 const projects = [
   {
     title: "Local LLM Chatbot",
@@ -33,7 +34,6 @@ const projects = [
     demo: "https://yourdomain.vercel.app",
     code: "https://github.com/Pixelated-Sage/portfolio-site",
   },
-
 ];
 
 const statusColors = {
@@ -44,25 +44,25 @@ const statusColors = {
 
 const ProjectsSection = () => {
   return (
-    <section id="projects" className=" w-full py-24 px-6 md:px-20 bg-white text-black">
-      <h2 className="text-4xl md:text-5xl font-bold text-center mb-16">
+    <section id="projects" className="w-full py-16 sm:py-24 px-4 sm:px-6 md:px-20 bg-white text-black">
+      <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-10 sm:mb-16">
         Projects
       </h2>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 w-[88%] mx-auto">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 w-full sm:w-[90%] md:w-[88%] mx-auto">
         {projects.map((project, idx) => (
           <div
             key={idx}
-            className="bg-white border border-gray-200 p-6 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 group relative flex flex-col justify-between"
+            className="bg-white border border-gray-200 p-5 sm:p-6 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 group flex flex-col justify-between"
           >
             <img
               src={project.image}
               alt={project.title}
-              className="w-full h-44 object-cover rounded-lg mb-4 border border-gray-100"
+              className="w-full h-40 sm:h-44 object-cover rounded-lg mb-4 border border-gray-100"
             />
 
             <div className="flex justify-between items-center mb-2">
-              <h3 className="text-xl font-semibold text-gray-900">
+              <h3 className="text-lg sm:text-xl font-semibold text-gray-900">
                 {project.title}
               </h3>
               <span
@@ -72,7 +72,7 @@ const ProjectsSection = () => {
               </span>
             </div>
 
-            <p className="text-gray-700 text-sm mb-4 leading-relaxed">
+            <p className="text-gray-700 text-sm sm:text-base mb-4 leading-relaxed">
               {project.description}
             </p>
 
@@ -87,7 +87,7 @@ const ProjectsSection = () => {
               ))}
             </div>
 
-            <div className="mt-auto flex gap-4">
+            <div className="mt-auto flex flex-col sm:flex-row gap-2 sm:gap-4">
               {project.demo && (
                 <a
                   href={project.demo}
