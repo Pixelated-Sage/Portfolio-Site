@@ -1,5 +1,5 @@
 import React from 'react'
-import image from '../../assets/img/img4.png'
+import image from '../../assets/img/img4.webp'
 
 // Add this to your public/index.html <head> section:
 
@@ -60,10 +60,12 @@ const Hero_casual = () => {
             </div>
             {/* Right: Image */}
             <div className="flex-1 flex items-center justify-center h-full min-h-screen">
-              new CloudinaryImage(image)
-                .resize(scale().width(1000))
-                .delivery(quality(auto()))
-                .delivery(format(auto()));
+              <img
+                src={image}
+                alt="Abhishek headshot"
+                className="h-full w-auto object-cover shadow-lg "
+                style={{ minHeight: '400px', maxHeight: '100vh' }}
+              />
             </div>
           </div>
         </div>
