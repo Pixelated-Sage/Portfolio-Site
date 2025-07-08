@@ -1,13 +1,13 @@
 import React from "react";
-import PythonCert from "../assets/certs/python.jpg";
-import AimlCert from "../assets/certs/aiml.jpg"
-import Git from "../assets/certs/git.jpg";
-import Ml from "../assets/certs/ml.jpg";
-import Pandas from "../assets/certs/pandas.jpg";
-import PowerBi from "../assets/certs/powerbi.jpg";
-import Frontend from "../assets/certs/Frontend.png";
-import Django from "../assets/certs/Django.jpg"
-import Machine from "../assets/certs/Machine.jpg"
+import PythonCert from "../assets/certs/python.webp";
+import AimlCert from "../assets/certs/aiml.webp";
+import Git from "../assets/certs/git.webp";
+import Ml from "../assets/certs/ml.webp";
+import Pandas from "../assets/certs/pandas.webp";
+import PowerBi from "../assets/certs/powerbi.webp";
+import Frontend from "../assets/certs/Frontend.webp";
+import Django from "../assets/certs/Django.webp";
+import Machine from "../assets/certs/Machine.webp";
 const certifications = [
 	{
 		title: "Python Basics",

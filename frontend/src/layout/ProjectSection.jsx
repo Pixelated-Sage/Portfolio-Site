@@ -1,7 +1,7 @@
 import React from "react";
-import LLM from "../assets/projectimg/llm.png";
-import ERP from "../assets/projectimg/erp.png";
-import Portfolio from "../assets/projectimg/portfolio.png"
+import LLM from "../assets/projectimg/llm.webp";
+import ERP from "../assets/projectimg/erp.webp";
+import Portfolio from "../assets/projectimg/portfolio.webp"
 const projects = [
   {
     title: "Local LLM Chatbot",
