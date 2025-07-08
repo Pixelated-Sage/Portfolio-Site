@@ -90,7 +90,7 @@ const ProjectsSection = () => {
             <div className="mt-auto flex flex-col sm:flex-row gap-2 sm:gap-4">
               {project.demo && (
                 <a
-                  href={project.demo}
+                  href="#"
                   target="_blank"
                   rel="noreferrer"
                   className="text-sm text-blue-600 hover:underline"
