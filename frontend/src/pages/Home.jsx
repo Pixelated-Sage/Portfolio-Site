@@ -9,13 +9,12 @@ import ContactSection from '../layout/ContactSection.jsx'
 import ExperienceSection from '../layout/ExprienceSection.jsx'
 import CertificationsSection from '../layout/CertificationsSection.jsx'
 import NotesSection from '../layout/NotesSection.jsx'
+import Test from '../layout/text.jsx'
 function Home() {
   return (
-    <div className="bg-white min-h-screen relative overflow-hidden">
-      {/* <StarsBg /> */}
-      {/* <AuroraBg /> */}
-      <div className="relative z-10">
+    <div className="min-h-screen relative overflow-hidden">
         {/* <Navbar/> */}
+        {/* <Test /> */}
         <Hero />
 
         <AboutSection />
@@ -28,7 +27,7 @@ function Home() {
         <CertificationsSection/>
         <NotesSection />
         <ContactSection />
-      </div>
+
     </div>
   )
 }
