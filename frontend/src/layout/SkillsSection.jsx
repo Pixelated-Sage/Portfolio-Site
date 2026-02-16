@@ -1,82 +1,89 @@
 import React from 'react';
-import { Code, Database, Palette, Users, Brain } from 'lucide-react';
+import { Code, Database, Palette, Users, Brain, Terminal, Server } from 'lucide-react';
 
-const SkillSection = () => {
+const SkillsSection = () => {
   const skillCategories = [
     {
-      title: 'Frontend Development',
+      title: 'Languages',
+      icon: <Terminal className="w-6 h-6" />,
+      skills: [
+        'Python', 'JavaScript', 'TypeScript', 'C++', 'SQL', 'Bash'
+      ]
+    },
+    {
+      title: 'Frontend',
       icon: <Code className="w-6 h-6" />,
       skills: [
-        'HTML', 'CSS', 'Tailwind CSS', 'JavaScript', 'React.js', 'Vite', 'GSAP', 'Firebase (Basics)',
-        'Figma (UI Design)'
+        'Next.js', 'React', 'React Native', 'Tailwind CSS'
       ]
     },
     {
-      title: 'Backend & Systems',
-      icon: <Database className="w-6 h-6" />,
+      title: 'Backend',
+      icon: <Server className="w-6 h-6" />,
       skills: [
-        'Python', 'C++','Java (Basics)', 'SQL (Basics)', 'Django', 'Django REST Framework',
-        'PostgreSQL (Learning)', 'Git', 'GitHub', 'Linux (Fedora)', 'Bash CLI'
+        'FastAPI', 'Node.js', 'Express.js', 'REST APIs', 'WebSockets'
       ]
     },
     {
-      title: 'AI, ML & Data',
+      title: 'AI / ML',
       icon: <Brain className="w-6 h-6" />,
       skills: [
-        'NumPy', 'Pandas', 'Matplotlib', 'Seaborn (Learning)',
-        'llama.cpp (LLM Inference)', 'GGUF Models', 'Prompt Engineering',
-        'Local LLM Setup (Mistral-7B)', 'CUDA Toolchain (Basic)',
-        'Memory Logs System (CLI Chat)'
+        'PyTorch', 'LangChain', 'RAG', 'sentence-transformers', 'LSTM', 'XGBoost', 'Gemini API'
       ]
     },
     {
-      title: 'Design & Creative Tools',
-      icon: <Palette className="w-6 h-6" />,
+      title: 'Databases',
+      icon: <Database className="w-6 h-6" />,
       skills: [
-        'Canva', 'Photoshop', 'Illustrator', 'Premiere Pro (Basics)'
+        'PostgreSQL', 'MongoDB', 'SQLite', 'ChromaDB'
       ]
     },
     {
-      title: 'Soft Skills & Leadership',
-      icon: <Users className="w-6 h-6" />,
+      title: 'DevOps & Tools',
+      icon: <Users className="w-6 h-6" />, // Using Users as a placeholder for DevOps/Team tools, or could import another icon
       skills: [
-        'Team Coordination', 'Public Speaking', 'Event Management',
-        'Motivation & Initiative', 'Communication', 'Discipline'
+        'Docker', 'Git', 'Vercel', 'Railway', 'Linux (Arch)', 'GCP'
       ]
     }
   ];
 
   return (
-    <section className="py-12 sm:py-16 px-4 sm:px-6 w-full">
-      <div className="text-center mb-10 sm:mb-12">
-        <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-          Skills & Expertise
+    <section id="skills" className="py-16 sm:py-24 px-4 sm:px-6 w-full bg-slate-50 relative overflow-hidden">
+      {/* Decorative background elements */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+        <div className="absolute -top-[20%] -right-[10%] w-[50%] h-[50%] bg-purple-200/30 rounded-full blur-3xl"></div>
+        <div className="absolute top-[30%] -left-[10%] w-[40%] h-[40%] bg-blue-200/30 rounded-full blur-3xl"></div>
+      </div>
+
+      <div className="relative z-10 text-center mb-12 sm:mb-16">
+        <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-6 tracking-tight">
+          Technical <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-600">Arsenal</span>
         </h2>
-        <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto px-2">
-          I’m a builder by nature — from intelligent tools to visual web experiences. I work across the stack, love clean UI, and dive deep into AI & automation using Python. Here’s what I’m good at and still mastering.
+        <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto px-4 leading-relaxed">
+          From crafting pixel-perfect frontends to architecting scalable AI pipelines, I bring a full spectrum of technical expertise to every project.
         </p>
       </div>
 
-      <div className="grid gap-6 sm:gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 w-full sm:w-[90%] md:w-[70%] mx-auto">
+      <div className="relative z-10 grid gap-6 sm:gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 w-full sm:w-[95%] md:w-[85%] mx-auto">
         {skillCategories.map((category, index) => (
           <div
             key={index}
-            className="bg-white rounded-xl p-5 sm:p-6 shadow-md hover:shadow-xl transition-shadow duration-300 border border-gray-100"
+            className="group bg-white/70 backdrop-blur-xl rounded-2xl p-6 shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 border border-white/50"
           >
-            <div className="flex items-center gap-3 mb-3 sm:mb-4">
-              <div className="p-2 bg-blue-100 rounded-lg text-blue-600">
+            <div className="flex items-center gap-4 mb-6">
+              <div className="p-3 bg-gradient-to-br from-purple-500 to-blue-500 rounded-xl text-white shadow-lg group-hover:scale-110 transition-transform duration-300">
                 {category.icon}
               </div>
-              <h3 className="text-lg sm:text-xl font-semibold text-gray-900">
+              <h3 className="text-xl font-bold text-gray-900 tracking-tight">
                 {category.title}
               </h3>
             </div>
 
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2.5">
               {category.skills.map((skill, skillIndex) => (
                 <span
                   key={skillIndex}
-                  className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs sm:text-sm font-medium hover:bg-gray-200 transition-colors duration-200"
+                  className="px-3 py-1.5 bg-white border border-gray-200 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 hover:border-purple-300 hover:text-purple-700 transition-all duration-200 shadow-sm"
                 >
                   {skill}
                 </span>
@@ -89,4 +96,4 @@ const SkillSection = () => {
   );
 };
 
-export default SkillSection;
+export default SkillsSection;

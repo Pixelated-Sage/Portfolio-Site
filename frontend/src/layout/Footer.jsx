@@ -9,8 +9,7 @@ const Footer = () => {
       <div className="flex flex-col sm:flex-row items-center justify-between max-w-5xl mx-auto gap-4">
         {/* Text Section */}
         <div className="text-sm sm:text-base font-orbitron tracking-wider text-center sm:text-left">
-          © {currentYear} Abhishek | Crafted with{" "}
-          <span className="text-pink-400">♥</span> in Space
+          © {currentYear} Abhishek Sharma | Built with React & Tailwind
         </div>
 
         {/* Icon Links */}

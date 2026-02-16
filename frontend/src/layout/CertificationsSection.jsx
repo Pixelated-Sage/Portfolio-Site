@@ -1,82 +1,63 @@
 import React from "react";
-import PythonCert from "../assets/certs/python.webp";
-import AimlCert from "../assets/certs/aiml.webp";
-import Git from "../assets/certs/git.webp";
-import Ml from "../assets/certs/ml.webp";
-import Pandas from "../assets/certs/pandas.webp";
-import PowerBi from "../assets/certs/powerbi.webp";
-import Frontend from "../assets/certs/Frontend.webp";
-import Django from "../assets/certs/Django.webp";
-import Machine from "../assets/certs/Machine.webp";
+import { Trophy, GitCommit, Rocket, Terminal, Star } from "lucide-react";
 
-const certifications = [
+const achievements = [
   {
-    title: "Python Basics",
-    issuer: "HackerRank",
-    year: "2024",
-    logo: PythonCert,
+    title: "RAG Sprint Champion",
+    description: "Built and deployed a production-grade RAG application in a 24-hour sprint with zero infrastructure cost.",
+    icon: <Rocket className="w-8 h-8 text-white" />,
+    color: "from-orange-500 to-red-500",
   },
   {
-    title: "Pandas",
-    issuer: "Kaggle",
-    year: "2024",
-    logo: Pandas,
+    title: "Open Source Contributor",
+    description: "467+ GitHub contributions in the last year. Authored comprehensive technical documentation for all major projects.",
+    icon: <GitCommit className="w-8 h-8 text-white" />,
+    color: "from-green-500 to-emerald-500",
   },
   {
-    title: "Git & GitHub",
-    issuer: "Geekster",
-    year: "2024",
-    logo: Git,
+    title: "Self-Taught Architect",
+    description: "Mastered RAG pipelines, vector embeddings, Async Python, FastAPI, and Cloud Architecture through independent research.",
+    icon: <Star className="w-8 h-8 text-white" />,
+    color: "from-purple-500 to-indigo-500",
   },
   {
-    title: "Frontend Development",
-    issuer: "SVIET College",
-    year: "2024",
-    logo: Frontend,
-  },
-  {
-    title: "Machine Learning Fundamentals",
-    issuer: "SVIET College",
-    year: "2024",
-    logo: Machine,
-  },
-  {
-    title: "Django",
-    issuer: "Udemy",
-    year: "2025",
-    logo: Django,
+    title: "System Power User",
+    description: "Arch Linux daily driver with custom automation scripts. Proficient in Docker containerization and system optimization.",
+    icon: <Terminal className="w-8 h-8 text-white" />,
+    color: "from-blue-500 to-cyan-500",
   },
 ];
 
 const CertificationsSection = () => {
   return (
-    <section className="w-full py-12 sm:py-20 px-4 sm:px-6 md:px-20 bg-white text-black">
-      <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-10 sm:mb-16">
-        Certifications & Achievements
-      </h2>
+    <section id="achievements" className="w-full py-16 sm:py-24 px-4 sm:px-6 md:px-20 bg-white text-black">
+      <div className="text-center mb-16">
+        <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-6 tracking-tight">
+          Key <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 to-orange-500">Achievements</span>
+        </h2>
+        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          Milestones that define my technical journey and dedication to excellence.
+        </p>
+      </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 max-w-7xl mx-auto">
-        {certifications.map((cert, index) => (
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 max-w-5xl mx-auto">
+        {achievements.map((achievement, index) => (
           <div
             key={index}
-            className="group bg-white/80 border border-gray-200 rounded-2xl p-4 backdrop-blur-md shadow-md hover:shadow-xl transition-all duration-300 flex flex-col items-center"
+            className="group bg-white border border-gray-100 rounded-2xl p-6 sm:p-8 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex items-start gap-6"
           >
-            <div className="w-full flex justify-center">
-              <img
-                src={cert.logo}
-                alt={cert.title}
-                className="w-full h-44 sm:h-56 object-contain rounded-xl border-2 border-purple-200 shadow mb-3 bg-white"
-              />
+            <div className={`p-4 rounded-xl bg-gradient-to-br ${achievement.color} shadow-lg group-hover:scale-110 transition-transform duration-300 shrink-0`}>
+              {achievement.icon}
             </div>
-            <h3 className="text-base sm:text-lg font-semibold text-purple-800 text-center mt-2">
-              {cert.title}
-            </h3>
-            <p className="text-xs sm:text-sm text-gray-600 text-center">
-              {cert.issuer}
-            </p>
-            <p className="text-xs text-gray-500 text-center mt-1">
-              {cert.year}
-            </p>
+            
+            <div>
+              <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
+                {achievement.title}
+              </h3>
+              <p className="text-gray-600 text-base leading-relaxed">
+                {achievement.description}
+              </p>
+            </div>
           </div>
         ))}
       </div>

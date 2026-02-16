@@ -2,112 +2,127 @@ import React from "react";
 import LLM from "../assets/projectimg/llm.webp";
 import ERP from "../assets/projectimg/erp.webp";
 import Portfolio from "../assets/projectimg/portfolio.webp";
+import { ExternalLink, Github, ArrowRight } from "lucide-react";
 
 const projects = [
   {
-    title: "Local LLM Chatbot",
+    title: "ChatPDF - AI Document Q&A",
     description:
-      "Built a fully local chatbot system using Mistral-7B, llama.cpp, CUDA (GTX 1650), memory logs, and prompt injection architecture. Fast, offline and ChatGPT-style.",
-    tags: ["Python", "C++", "CUDA", "llama.cpp", "Fedora"],
-    status: "Completed",
+      "A full-stack RAG pipeline processing 100+ page PDFs with cited answers. Features real-time streaming via Server-Sent Events (SSE) and sub-2-second response times.",
+    tags: ["Next.js 14", "FastAPI", "LangChain", "ChromaDB", "Gemini Pro"],
+    status: "Live",
     image: LLM,
-    demo: "",
-    code: "https://github.com/Pixelated-Sage/local-llm-core",
+    demo: "https://chat-pdf-neon.vercel.app",
+    code: "", // Add repo link if available, otherwise leave empty or use a placeholder
   },
   {
-    title: "ERP 2.0",
+    title: "Super 60 ERP & Event Platform",
     description:
-      "A redesigned version of college ERP with responsive UI, real-time updates, and feature enhancements for a modern student workflow.",
-    tags: ["React", "Firebase", "Tailwind"],
-    status: "Completed",
+      "Comprehensive ERP system serving 100+ users. Includes real-time collaboration, authentication, user profiles, and an admin dashboard. Mobile-first design.",
+    tags: ["React", "Node.js", "MongoDB", "Express.js", "Tailwind CSS"],
+    status: "Live",
     image: ERP,
-    demo: "",
-    code: "https://github.com/Pixelated-Sage/ERP_Inhanced.git",
+    demo: "https://supersixty.in",
+    code: "",
   },
   {
-    title: "React Portfolio Website",
+    title: "Stock Market Prediction",
     description:
-      "Responsive personal portfolio built with React, Tailwind, and animations. Modular sections, scalable, and deployment-ready.",
-    tags: ["React", "Tailwind", "Vercel"],
-    status: "Ongoing",
-    image: Portfolio,
-    demo: "https://yourdomain.vercel.app",
-    code: "https://github.com/Pixelated-Sage/portfolio-site",
+      "Time-series forecasting for crypto and stocks using LSTM and XGBoost. Includes an ETL pipeline and a FastAPI backend with async endpoints for real-time predictions.",
+    tags: ["PyTorch", "LSTM", "XGBoost", "FastAPI", "React Native"],
+    status: "ML Project",
+    image: Portfolio, // Using Portfolio image as placeholder for Stock Market project
+    demo: "",
+    code: "",
   },
 ];
 
 const statusColors = {
-  Completed: "text-green-600 border-green-300 bg-green-50",
-  Ongoing: "text-yellow-700 border-yellow-400 bg-yellow-50",
-  Planned: "text-gray-500 border-gray-300 bg-gray-100",
+  Live: "bg-green-100 text-green-700 border-green-200",
+  "ML Project": "bg-blue-100 text-blue-700 border-blue-200",
+  Ongoing: "bg-yellow-100 text-yellow-700 border-yellow-200",
 };
 
 const ProjectsSection = () => {
   return (
     <section id="projects" className="w-full py-16 sm:py-24 px-4 sm:px-6 md:px-20 bg-white text-black">
-      <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-10 sm:mb-16">
-        Projects
-      </h2>
+      <div className="text-center mb-16">
+        <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-6 tracking-tight">
+          Featured <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">Projects</span>
+        </h2>
+        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          A showcase of my recent work in AI, Full-Stack Development, and System Architecture.
+        </p>
+      </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 w-full sm:w-[90%] md:w-[88%] mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10 w-full sm:w-[95%] md:w-[90%] mx-auto">
         {projects.map((project, idx) => (
           <div
             key={idx}
-            className="bg-white border border-gray-200 p-5 sm:p-6 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 group flex flex-col justify-between"
+            className="group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:-translate-y-2 flex flex-col"
           >
-            <img
-              src={project.image}
-              alt={project.title}
-              className="w-full h-40 sm:h-44 object-cover rounded-lg mb-4 border border-gray-100"
-            />
-
-            <div className="flex justify-between items-center mb-2">
-              <h3 className="text-lg sm:text-xl font-semibold text-gray-900">
-                {project.title}
-              </h3>
-              <span
-                className={`text-xs px-3 py-1 rounded-full border font-medium ${statusColors[project.status]}`}
-              >
-                {project.status}
-              </span>
-            </div>
-
-            <p className="text-gray-700 text-sm sm:text-base mb-4 leading-relaxed">
-              {project.description}
-            </p>
-
-            <div className="flex flex-wrap gap-2 mb-4">
-              {project.tags.map((tag, i) => (
-                <span
-                  key={i}
-                  className="text-xs px-2.5 py-1 bg-gray-100 border border-gray-300 rounded-full text-gray-700"
-                >
-                  {tag}
+            <div className="relative overflow-hidden h-52 sm:h-60">
+              <img
+                src={project.image}
+                alt={project.title}
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
+                <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${statusColors[project.status]} bg-white/90 backdrop-blur-sm border-0`}>
+                  {project.status}
                 </span>
-              ))}
+              </div>
             </div>
 
-            <div className="mt-auto flex flex-col sm:flex-row gap-2 sm:gap-4">
-              {project.demo && (
-                <a
-                  href="#"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-sm text-blue-600 hover:underline"
-                >
-                  Live Demo
-                </a>
-              )}
-              {project.code && (
-                <a
-                  href={project.code}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-sm text-purple-600 hover:underline"
-                >
-                  Source Code
-                </a>
-              )}
+            <div className="p-6 sm:p-8 flex flex-col flex-grow">
+              <div className="flex justify-between items-start mb-4">
+                <h3 className="text-2xl font-bold text-gray-900 leading-tight group-hover:text-purple-700 transition-colors">
+                  {project.title}
+                </h3>
+              </div>
+
+              <p className="text-gray-600 text-base mb-6 leading-relaxed flex-grow">
+                {project.description}
+              </p>
+
+              <div className="flex flex-wrap gap-2 mb-8">
+                {project.tags.map((tag, i) => (
+                  <span
+                    key={i}
+                    className="text-xs px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-full text-gray-600 font-medium"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+
+              <div className="flex items-center gap-4 mt-auto">
+                {project.demo && (
+                  <a
+                    href={project.demo}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-lg text-sm font-semibold hover:bg-gray-800 transition-colors"
+                  >
+                    <ExternalLink className="w-4 h-4" /> Live Demo
+                  </a>
+                )}
+                {project.code && (
+                  <a
+                    href={project.code}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="flex items-center gap-2 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-50 transition-colors"
+                  >
+                    <Github className="w-4 h-4" /> Code
+                  </a>
+                )}
+                {!project.demo && !project.code && (
+                   <span className="text-sm text-gray-400 italic flex items-center gap-2">
+                     In Development <ArrowRight className="w-4 h-4" />
+                   </span>
+                )}
+              </div>
             </div>
           </div>
         ))}
