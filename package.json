@@ -1,0 +1,12 @@
+{
+  "name": "abhishek-portfolio-workspace",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "npm --prefix frontend run dev",
+    "build": "npm --prefix frontend run build",
+    "preview": "npm --prefix frontend run preview",
+    "publish:daily": "npm --prefix publisher run publish:daily",
+    "test:publisher": "npm --prefix publisher test"
+  }
+}

@@ -1,3 +1,23 @@
+node_modules/
+dist/
 context/
 plan.md
+planV2.1.txt
 theme.md
+.env
+.env.*
+!.env.example
+publisher/.env
+!publisher/.env.example
+input/today.md
+input/*.md
+!input/.gitkeep
+
+# Local-only publisher data — never commit
+/input/
+/publisher/.env
+/publisher/.env.*
+!/publisher/.env.example
+/publisher/node_modules/
+/publisher/dist/
+/publisher/.state/

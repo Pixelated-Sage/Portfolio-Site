@@ -124,9 +124,9 @@ Append a new object to `activityRecords`. The `computeStreakStats()` utility aut
 
 ---
 
-## 5. Development & Build Commands
+## 5. Development & Publishing Commands
 
-All client commands are run inside the `frontend` folder:
+### Website Client (`frontend`)
 
 ```bash
 cd frontend
@@ -146,6 +146,34 @@ npm run preview
 # Run ESLint linter
 npm run lint
 ```
+
+### Local AI Publishing Engine (`publisher` — V2.1)
+
+A single command transforms your daily Notion note and verified GitHub evidence into an approved Engineering Log entry, commits it, and pushes it to your deployment branch:
+
+```bash
+# 1. Paste your raw daily note into input/today.md
+# (input/today.md is gitignored to protect private raw drafts)
+
+# 2. Run the publishing command from workspace root
+npm run publish:daily
+
+# 3. Run automated tests for the publisher tool
+npm run test:publisher
+```
+
+#### Pipeline Flow:
+1. **Raw Note Ingestion & Private Backup**: Ingests `input/today.md` and immediately archives it into local PostgreSQL `raw_notes` table with SHA256 hashing.
+2. **Evidence Collection**: Inspects `abhishek-engineering-labs` for new commits since the last checkpoint, collecting commit messages, paths, and diffs.
+3. **4-Stage AI Pipeline (Ollama `qwen2.5:3b-instruct`)**:
+   - *Stage 1*: Extract factual claims with source attribution.
+   - *Stage 2*: Generate structured Engineering Log entry and Formatted Daily Note.
+   - *Stage 3*: Audit claims against real Git commits and code diffs.
+   - *Stage 4*: Validate schema constraints with Zod.
+4. **Formatted Note Preservation**: Saves the structured formatted note into PostgreSQL `formatted_notes` table for permanent private history.
+5. **Dry-Run Build**: Executes `npm run build` in `frontend` to guarantee zero compilation or type errors.
+6. **Interactive Review**: Displays the formatted entry and evidence audit report in the terminal, requesting explicit `(y/N)` approval.
+7. **Safe Publishing**: Upon approval, stages only `frontend/src/data/engineeringLog.ts` and `frontend/src/data/activityLog.ts`, commits, pushes to GitHub, and advances the PostgreSQL checkpoint.
 
 ---
 
