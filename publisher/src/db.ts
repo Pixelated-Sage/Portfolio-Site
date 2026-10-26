@@ -81,10 +81,11 @@ export async function updatePublishingApproval(
   recordId: number,
   status: 'APPROVED' | 'REJECTED'
 ): Promise<void> {
+  const publishedAtClause = status === 'APPROVED' ? 'NOW()' : 'NULL';
   await pool.query(
     `UPDATE publishing_records
      SET approval_status = $1,
-         published_at = CASE WHEN $1 = 'APPROVED' THEN NOW() ELSE NULL END
+         published_at = ${publishedAtClause}
      WHERE id = $2;`,
     [status, recordId]
   );

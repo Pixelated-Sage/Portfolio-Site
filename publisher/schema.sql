@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS formatted_notes (
 CREATE TABLE IF NOT EXISTS publishing_records (
     id SERIAL PRIMARY KEY,
     entry_id VARCHAR(50) NOT NULL,
-    slug VARCHAR(100) NOT NULL UNIQUE,
+    slug VARCHAR(100) NOT NULL,
     day_number INT NOT NULL,
     entry_date DATE NOT NULL,
     title TEXT NOT NULL,
@@ -50,3 +50,5 @@ CREATE TABLE IF NOT EXISTS publishing_records (
 
 CREATE INDEX IF NOT EXISTS idx_publishing_records_day ON publishing_records(day_number);
 CREATE INDEX IF NOT EXISTS idx_publishing_records_date ON publishing_records(entry_date);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_publishing_records_approved_slug ON publishing_records(slug) WHERE approval_status = 'APPROVED';
+CREATE UNIQUE INDEX IF NOT EXISTS idx_publishing_records_approved_day ON publishing_records(day_number) WHERE approval_status = 'APPROVED';
