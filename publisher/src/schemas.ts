@@ -69,9 +69,21 @@ export const FormattedDailyNoteSchema = z.object({
 
 export type FormattedDailyNote = z.infer<typeof FormattedDailyNoteSchema>;
 
+export const FileEvidenceItemSchema = z.object({
+  repository: z.string(),
+  filePath: z.string(),
+  category: z.enum(['executable_implementation', 'database_schema', 'documentation']),
+  verifiedCapabilities: z.array(z.string()),
+  relevantCodeSnippet: z.string().optional(),
+});
+
+export type FileEvidenceItem = z.infer<typeof FileEvidenceItemSchema>;
+
 export const AuditReportSchema = z.object({
+  evidenceByFile: z.array(FileEvidenceItemSchema).default([]),
+  distinctionAnalysis: z.string(),
   verifiedClaims: z.array(z.string()),
-  flaggedUnsupportedClaims: z.array(z.string()),
+  flaggedUnsupportedClaims: z.array(z.string()).default([]),
   recommendation: z.enum(['PASS', 'WARN', 'FAIL']),
   explanation: z.string(),
 });

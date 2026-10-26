@@ -93,8 +93,25 @@ describe('Zod Schema Validation Tests', () => {
     expect(result.success).toBe(true);
   });
 
-  it('should validate AuditReportSchema', () => {
+  it('should validate AuditReportSchema with evidenceByFile and distinctionAnalysis', () => {
     const validAudit = {
+      evidenceByFile: [
+        {
+          repository: 'abhishek-engineering-labs',
+          filePath: 'backend/day-21-validation-errors/server.js',
+          category: 'executable_implementation',
+          verifiedCapabilities: ['Zod schema validation on DTO inputs returning HTTP 400'],
+          relevantCodeSnippet: 'const result = apiValidation.safeParse(req.body);',
+        },
+        {
+          repository: 'abhishek-engineering-labs',
+          filePath: 'backend/day-21-validation-errors/README.md',
+          category: 'documentation',
+          verifiedCapabilities: ['Documented HTTP test cases for status codes 400, 403, 422, 500'],
+        },
+      ],
+      distinctionAnalysis:
+        'Executable code in server.js demonstrates 4-tier validation with Zod and Express middleware; README documentation and personal note provide test cases and developer experience.',
       verifiedClaims: ['Claim 1 verified in server.js'],
       flaggedUnsupportedClaims: [],
       recommendation: 'PASS',

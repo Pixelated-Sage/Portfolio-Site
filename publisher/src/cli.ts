@@ -165,24 +165,51 @@ export async function main() {
   console.log('Details:');
   entry.details.forEach((d) => console.log(`  • ${d}`));
   if (entry.codeSnippet) {
-    console.log(`Code Snippet (${entry.codeSnippet.language}): ${entry.codeSnippet.caption}`);
-    console.log('---');
+    console.log(`\nCode Snippet (${entry.codeSnippet.language}): ${entry.codeSnippet.caption}`);
+    console.log('--------------------------------------------------------');
     console.log(entry.codeSnippet.code);
-    console.log('---');
+    console.log('--------------------------------------------------------');
   }
   if (entry.evidenceCommit) {
-    console.log(`Evidence: Commit ${entry.evidenceCommit.hash} - ${entry.evidenceCommit.message}`);
+    console.log(`Evidence Commit: ${entry.evidenceCommit.hash} - "${entry.evidenceCommit.message}"`);
+    console.log(`Commit URL:      ${entry.evidenceCommit.url}`);
   }
 
-  console.log('\n--------------------------------------------------------');
-  console.log('🛡️  EVIDENCE AUDIT REPORT');
-  console.log('--------------------------------------------------------');
-  console.log(`Audit Result:  ${auditReport.recommendation}`);
-  console.log(`Explanation:   ${auditReport.explanation}`);
-  console.log('Verified Claims:');
+  console.log('\n========================================================');
+  console.log('🛡️  EVIDENCE AUDIT REPORT (Code vs Documentation)');
+  console.log('========================================================');
+  console.log(`Audit Recommendation: ${auditReport.recommendation}`);
+  console.log(`Audit Explanation:    ${auditReport.explanation}`);
+  console.log(`\n🔬 Distinction Analysis:`);
+  console.log(`   ${auditReport.distinctionAnalysis}`);
+
+  console.log(`\n📂 Evidence by Repository & File Path:`);
+  if (auditReport.evidenceByFile.length > 0) {
+    auditReport.evidenceByFile.forEach((ef, idx) => {
+      console.log(`\n  [File ${idx + 1}] ${ef.repository} ➔ ${ef.filePath}`);
+      console.log(`  Category:     ${ef.category.toUpperCase().replace('_', ' ')}`);
+      console.log(`  Capabilities Verified:`);
+      ef.verifiedCapabilities.forEach((cap) => console.log(`    ✓ ${cap}`));
+      if (ef.relevantCodeSnippet) {
+        console.log(`  Relevant Code / Evidence:`);
+        console.log(`  ----------------------------------------------------`);
+        console.log(
+          ef.relevantCodeSnippet
+            .split('\n')
+            .map((line) => `    ${line}`)
+            .join('\n')
+        );
+        console.log(`  ----------------------------------------------------`);
+      }
+    });
+  } else {
+    console.log('  (No file-level breakdown supplied by model)');
+  }
+
+  console.log('\nVerified Claims:');
   auditReport.verifiedClaims.forEach((c) => console.log(`  ✓ ${c}`));
   if (auditReport.flaggedUnsupportedClaims.length > 0) {
-    console.log('⚠️ Flagged Unsupported Claims:');
+    console.log('\n⚠️ Flagged Unsupported Claims:');
     auditReport.flaggedUnsupportedClaims.forEach((c) => console.log(`  ✗ ${c}`));
   }
   console.log('========================================================\n');

@@ -11,6 +11,7 @@ describe('Publishing Pipeline Integration Test', () => {
 4. Database layer constraints as failsafe.`;
 
     const mockEvidence: LabEvidence = {
+      repositoryName: 'abhishek-engineering-labs',
       commits: [
         {
           hash: 'fb8450ea8544f865bffd7898e0adbec6eafc4db5',
@@ -24,18 +25,49 @@ describe('Publishing Pipeline Integration Test', () => {
             'backend/day-21-validation-errors/server.js',
           ],
           diffSummary: '2 files changed, 362 insertions(+), 15 deletions(-)',
-          keySnippets: [
-            {
-              filename: 'backend/day-21-validation-errors/server.js',
-              snippet: 'const apiValidation = z.object({ name: z.string(), email: z.string().email() });',
-            },
-          ],
         },
       ],
       latestCommitHash: 'fb8450ea8544f865bffd7898e0adbec6eafc4db5',
       latestCommitDate: new Date('2026-10-25T20:45:03Z'),
       dayFolder: 'backend/day-21-validation-errors',
-      dayReadmeContent: '# DAY 21 validations and errors\nRules of Validation:\n- failfast\n- all inputs are unsafe',
+      executableFiles: [
+        {
+          repository: 'abhishek-engineering-labs',
+          filePath: 'backend/day-21-validation-errors/server.js',
+          category: 'executable_implementation',
+          content: 'const apiValidation = z.object({ name: z.string().min(5), email: z.string().email(), role: z.enum(["user", "admin"]) });',
+          relevantSections: [
+            {
+              title: 'Zod DTO Validation Schema',
+              snippet: 'const apiValidation = z.object({ name: z.string().min(5), email: z.string().email(), role: z.enum(["user", "admin"]) });',
+            },
+            {
+              title: 'Route Handler POST /users',
+              snippet: 'app.post("/users", (req, res, next) => { const result = apiValidation.safeParse(req.body); if(!result.success) return res.status(400).json({ success:false, error: result.error.format() }); if(role === "admin") return res.status(403).json({ error: "Unauthorized" }); if(users.find(u => u.email === email)) return res.status(422).json({ error: "user exists" }); users.push({name, email, role}); return res.status(201).json({ success:true }); });',
+            },
+          ],
+        },
+      ],
+      schemaFiles: [],
+      documentationFiles: [
+        {
+          repository: 'abhishek-engineering-labs',
+          filePath: 'backend/day-21-validation-errors/README.md',
+          category: 'documentation',
+          content: '# DAY 21 validations and errors\nRules:\n- failfast\n- all inputs unsafe\n## Test Cases\n### For 400 bad request Name\nstatus: 400 Bad Request',
+          relevantSections: [
+            {
+              title: 'Validation Rules',
+              snippet: 'Rules of Validation:\n- failfast\n- all inputs are unsafe',
+            },
+            {
+              title: 'Documented Test Cases',
+              snippet: '400 Bad Request for missing name and email\n403 Forbidden for admin role\n422 Unprocessable for duplicate user',
+            },
+          ],
+        },
+      ],
+      dependenciesUsed: ['express', 'cors', 'zod'],
     };
 
     const output = await runPublishingPipeline({
@@ -53,5 +85,7 @@ describe('Publishing Pipeline Integration Test', () => {
     expect(output.activityRecord.status).toBe('verified');
     expect(output.formattedNote.dayNumber).toBe(21);
     expect(output.auditReport.recommendation).toBeDefined();
-  }, 45000); // 45s timeout for local Ollama inference
+    expect(output.auditReport.distinctionAnalysis).toBeDefined();
+    expect(output.auditReport.distinctionAnalysis.length).toBeGreaterThan(10);
+  }, 120000); // 120s timeout for local Ollama inference
 });
