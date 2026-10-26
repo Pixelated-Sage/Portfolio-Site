@@ -12,6 +12,17 @@ export interface ActivityRecord {
 
 export const activityRecords: ActivityRecord[] = [
   {
+    "date": "2026-10-25",
+    "title": "Day 21: Multi-Layer Validation and Error Handling",
+    "topic": "Backend Architecture",
+    "commitHash": "fb8450e",
+    "commitMessage": "validation done , totally loved and enjoyed it (next station automated api testing)",
+    "commitUrl": "https://github.com/Pixelated-Sage/abhishek-engineering-labs/commit/fb8450ea8544f865bffd7898e0adbec6eafc4db5",
+    "exercisePath": "backend/day-21-validation-errors",
+    "status": "verified",
+    "summary": "Built multi-layer validation in Express: verified implementations for Zod DTO (400), authorization (403), and domain conflicts (422) with centralized error middleware (500), plus documented persistence constraints."
+  },
+  {
     date: "2026-10-23",
     title: "SQL Consolidation & Grouped Aggregations",
     topic: "PostgreSQL & SQL",
@@ -238,6 +249,12 @@ export function computeStreakStats(): StreakStats {
 }
 
 export const recentMilestones = [
+  {
+    date: "Oct 25, 2026",
+    title: "Day 21: Multi-Layer Validation and Error Handling",
+    summary: "Built multi-layer validation in Express: verified implementations for Zod DTO (400), authorization (403), and domain conflicts (422) with centralized error middleware (500), plus documented persistence constraints.",
+    exercise: "backend/day-21-validation-errors",
+  },
   {
     date: "Oct 23, 2026",
     title: "Inventory Sales Aggregation Completed",

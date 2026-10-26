@@ -26,6 +26,36 @@ export interface EngineeringEntry {
 
 export const engineeringLogData: EngineeringEntry[] = [
   {
+    "id": "day-21",
+    "slug": "day-21-validation-errors",
+    "dayNumber": 21,
+    "date": "2026-10-25",
+    "title": "Day 21: Multi-Layer Validation and Error Handling",
+    "topic": "Backend Architecture",
+    "status": "completed",
+    "summary": "Implemented a multi-tier validation architecture in Express with verified implementations for API/DTO (Zod 400), controller authorization (403), and domain conflict handling (422), supported by centralized error middleware (500), while documenting database persistence constraints as the final defense layer.",
+    "keyTakeaway": "Failing fast at the DTO layer with schema parsers prevents invalid or unvetted data types from reaching downstream business logic and system state.",
+    "details": [
+      "Layer 1 (API/DTO — Verified Implementation): Enforced input schema validation using Zod safeParse, rejecting invalid payloads early with HTTP 400 Bad Request and formatted issue trees.",
+      "Layer 2 (Controller/Context — Verified Implementation): Evaluated request context and roles to prevent unauthorized administrative operations, returning HTTP 403 Forbidden.",
+      "Layer 3 (Domain/Service — Verified Implementation): Checked domain business invariants against in-memory state to prevent duplicate user registrations, returning HTTP 422 Unprocessable Entity.",
+      "Layer 4 (Persistence/Database — Studied/Documented): Studied database-level constraints as the ultimate failsafe; documented conceptually in notes and simulated with an in-memory array rather than executable SQL schema in this repository.",
+      "Error Handling (Centralized Middleware): Configured a dedicated 4-parameter Express error handling middleware to catch unexpected server failures and format HTTP 500 responses without crashing the node process."
+    ],
+    "codeSnippet": {
+      "language": "javascript",
+      "code": "const result = apiValidation.safeParse(req.body);\nif (!result.success) {\n  return res.status(400).json({\n    success: false,\n    Message: 'Your input values are wrong',\n    error: result.error.format()\n  });\n}",
+      "caption": "DTO schema validation using Zod safeParse in Express (server.js)"
+    },
+    "evidenceCommit": {
+      "hash": "fb8450e",
+      "date": "2026-10-25",
+      "message": "validation done , totally loved and enjoyed it (next station automated api testing)",
+      "url": "https://github.com/Pixelated-Sage/abhishek-engineering-labs/commit/fb8450ea8544f865bffd7898e0adbec6eafc4db5"
+    },
+    "repoPath": "backend/day-21-validation-errors"
+  },
+  {
     id: "day-20",
     slug: "day-20-database-consolidation",
     dayNumber: 20,
