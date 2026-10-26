@@ -66,8 +66,13 @@ export async function runPublishingPipeline(params: {
   const stage1Prompt = `You are a strict technical evidence analyst.
 Analyze the author's daily note and the repository evidence.
 Distinguish clearly:
-1. "reportedExperience": What the author describes experiencing, learning, struggling with, or intending in the daily note (e.g. forgetting return statements, terminal errors, hand-crafted effort).
-2. "demonstratedCapabilities": What the executable code (server.js / schema) and documented tests actually demonstrate (e.g. Zod safeParse, HTTP 400 Bad Request, role checks, status codes).
+1. "reportedExperience": What the author describes experiencing, learning, struggling with, or intending in the daily note:
+   - Note defines 4 conceptual layers: 1. API/DTO (400), 2. Controller/context authorization (403), 3. Domain/service duplicate check (422), 4. Persistence/database constraints.
+   - Note reports struggling with missing return statements after sending HTTP responses causing unhandled rejections / errors.
+2. "demonstratedCapabilities": What the executable code (server.js / schema) and documented tests actually demonstrate:
+   - Layers 1 to 3 are verified implementations in server.js (Zod safeParse for 400, role check for 403, in-memory duplicate check for 422).
+   - Centralized error handling middleware is verified in server.js returning 500.
+   - Layer 4 (database persistence constraints): No SQL schema file exists in the folder; user store is simulated with an in-memory array. Layer 4 is documented/studied conceptually in notes, but not implemented as executable database schema.
 
 [AUTHOR PERSONAL NOTE]
 ${rawDailyNote}
@@ -84,15 +89,17 @@ ${docFilesContext}
 Output JSON format:
 {
   "reportedExperience": [
-    "Faced terminal errors caused by missing return statements after sending HTTP responses",
+    "Defined 4 conceptual validation layers: API/DTO (400), Controller/context (403), Domain/service (422), Persistence/database constraints",
+    "Faced terminal errors and unhandled rejections caused by missing return statements after sending HTTP responses",
     "Hand-coded server.js and wrote manual README notes to rebuild fundamentals"
   ],
   "demonstratedCapabilities": [
     "Express.js HTTP server running on port 3000 with CORS and express.json middleware",
-    "API/DTO layer validation using Zod safeParse returning HTTP 400 with formatted error details",
-    "Controller context check verifying role is not admin, returning HTTP 403 Forbidden",
-    "Domain logic checking duplicate user existence in in-memory store, returning HTTP 422 Unprocessable Entity",
-    "Centralized 4-parameter error middleware handling 500 internal server errors"
+    "Layer 1 (API/DTO): Executable Zod safeParse validation returning HTTP 400 Bad Request with formatted error details",
+    "Layer 2 (Controller/Context): Executable role authorization check returning HTTP 403 Forbidden for admin account creation",
+    "Layer 3 (Domain/Service): Executable duplicate user check against in-memory state returning HTTP 422 Unprocessable Entity",
+    "Error Handling: Executable centralized 4-parameter error middleware handling HTTP 500 internal server errors",
+    "Layer 4 (Persistence/Database): Documented conceptually in notes/README; simulated via in-memory array with no executable SQL schema in repository"
   ]
 }`;
 
@@ -106,14 +113,16 @@ Output JSON format:
 
   let rawClaims = {
     reportedExperience: [
-      'Experienced error propagation issues when missing return statements in route handlers',
+      'Documented 4-layer validation strategy: API/DTO (400), Controller/Context (403), Domain/Service (422), and Persistence/Database constraints',
+      'Experienced terminal errors and unhandled rejections when missing return statements after response calls',
       'Handcrafted Express server and test documentation to reinforce fundamentals',
     ],
     demonstratedCapabilities: [
-      'Implemented DTO schema validation with Zod returning HTTP 400',
-      'Implemented controller authorization check returning HTTP 403',
-      'Implemented domain logic conflict check returning HTTP 422',
-      'Centralized error handling middleware returning HTTP 500',
+      'Layer 1 (API/DTO): Executable Zod schema validation returning HTTP 400',
+      'Layer 2 (Controller/Context): Executable authorization check returning HTTP 403',
+      'Layer 3 (Domain/Service): Executable conflict check returning HTTP 422',
+      'Error Handling: Centralized error middleware returning HTTP 500',
+      'Layer 4 (Persistence/Database): Documented/studied in notes; simulated in-memory without executable SQL schema',
     ],
   };
 
@@ -137,10 +146,16 @@ Rules:
 2. Slug must be "day-${currentDayNumber}-validation-errors".
 3. Day number is ${currentDayNumber}.
 4. Date is "${entryDate}".
-5. Topic MUST be "Backend Architecture".
-6. Status is "completed".
-7. Summary and details MUST reflect what server.js actually executes (Express, Zod safeParse, HTTP 400, 403, 422, 500 error middleware).
-8. Do NOT claim live PostgreSQL database migrations if the database layer in this exercise is simulated in-memory.
+5. Title MUST be EXACTLY "Day ${currentDayNumber}: Multi-Layer Validation and Error Handling".
+6. Topic MUST be "Backend Architecture".
+7. Status is "completed".
+8. ARCHITECTURAL LAYERS & ERROR HANDLING RULES:
+   - Describe the first three layers as verified implementation:
+     • Layer 1: API / DTO layer — Zod validation returning HTTP 400 Bad Request with formatted errors.
+     • Layer 2: Controller / context — role authorization check returning HTTP 403 Forbidden.
+     • Layer 3: Domain / service — duplicate user check returning HTTP 422 Unprocessable Entity.
+   - Mention centralized error middleware separately under error handling (Express 4-parameter error handler returning HTTP 500). Do NOT describe error handling as the fourth validation layer.
+   - For the 4th layer (Persistence / database constraints): Label this layer as studied/documented rather than implemented, because the repository simulates state with an in-memory array and contains no executable SQL schema/migration files.
 9. Provide an exact code snippet from server.js.
 
 [DEMONSTRATED CAPABILITIES]
@@ -161,16 +176,17 @@ Output JSON format:
     "slug": "day-${currentDayNumber}-validation-errors",
     "dayNumber": ${currentDayNumber},
     "date": "${entryDate}",
-    "title": "Day ${currentDayNumber}: Multi-Layer Validation & Error Handling",
+    "title": "Day ${currentDayNumber}: Multi-Layer Validation and Error Handling",
     "topic": "Backend Architecture",
     "status": "completed",
-    "summary": "Implemented a 4-tier validation architecture in Express using Zod DTO parsing, context authorization checks, domain uniqueness rules, and centralized error middleware.",
+    "summary": "Implemented a multi-tier validation architecture in Express with verified implementations for API/DTO (Zod 400), controller authorization (403), and domain conflict handling (422), supported by centralized error middleware (500), while documenting database persistence constraints as the final defense layer.",
     "keyTakeaway": "Failing fast at the DTO layer with schema parsers prevents invalid or unvetted data types from reaching downstream business logic and system state.",
     "details": [
-      "API/DTO Layer: Enforced schema validation using Zod safeParse to intercept missing or invalid inputs early, returning HTTP 400 Bad Request with formatted error trees.",
-      "Controller / Context Layer: Added authorization context checks to block unauthorized admin account creation with HTTP 403 Forbidden.",
-      "Domain / Service Layer: Checked entity state invariants to prevent duplicate user registrations, returning HTTP 422 Unprocessable Entity.",
-      "Centralized Error Middleware: Configured 4-parameter Express error handling middleware to catch unhandled errors and format HTTP 500 responses cleanly without crashing the process."
+      "Layer 1 (API/DTO — Verified Implementation): Enforced input schema validation using Zod safeParse, rejecting invalid payloads early with HTTP 400 Bad Request and formatted issue trees.",
+      "Layer 2 (Controller/Context — Verified Implementation): Evaluated request context and roles to prevent unauthorized administrative operations, returning HTTP 403 Forbidden.",
+      "Layer 3 (Domain/Service — Verified Implementation): Checked domain business invariants against in-memory state to prevent duplicate user registrations, returning HTTP 422 Unprocessable Entity.",
+      "Layer 4 (Persistence/Database — Studied/Documented): Studied database-level constraints as the ultimate failsafe; documented conceptually in notes and simulated with an in-memory array rather than executable SQL schema in this repository.",
+      "Error Handling (Centralized Middleware): Configured a dedicated 4-parameter Express error handling middleware to catch unexpected server failures and format HTTP 500 responses without crashing the node process."
     ],
     "codeSnippet": {
       "language": "javascript",
@@ -187,14 +203,14 @@ Output JSON format:
   },
   "activityRecord": {
     "date": "${entryDate}",
-    "title": "Multi-Tier Validation & Zod Schema Defense",
+    "title": "Day ${currentDayNumber}: Multi-Layer Validation and Error Handling",
     "topic": "Backend Architecture",
     "commitHash": "${latestCommit?.shortHash || 'fb8450e'}",
     "commitMessage": "${latestCommit?.message || 'validation done'}",
     "commitUrl": "https://github.com/Pixelated-Sage/abhishek-engineering-labs/commit/${latestCommit?.hash || 'fb8450e'}",
     "exercisePath": "${evidence.dayFolder || 'backend/day-21-validation-errors'}",
     "status": "verified",
-    "summary": "Built a 4-tier validation flow in Express using Zod safeParse, authorization checks, domain uniqueness rules, and centralized error handling."
+    "summary": "Built multi-layer validation in Express: verified implementations for Zod DTO (400), authorization (403), and domain conflicts (422) with centralized error middleware (500), plus documented persistence constraints."
   },
   "formattedNote": {
     "dayNumber": ${currentDayNumber},
@@ -202,15 +218,16 @@ Output JSON format:
     "title": "Day ${currentDayNumber}: Multi-Layer Validation and Error Handling",
     "topic": "Backend Architecture",
     "keyLearnings": [
-      "Fail-fast principle: validate structure and data types before executing business logic.",
-      "All client inputs are untrusted and must be validated with explicit schema boundaries.",
-      "Always include return statements when sending HTTP responses to avoid headers already sent errors."
+      "Layer 1-3 validation: Fail fast at DTO (400), check context authorization (403), and enforce domain business invariants (422).",
+      "Persistence failsafe: Database constraints (UNIQUE, CHECK) provide final defense but require executable SQL schema/DDL.",
+      "Centralized error handling: Separate validation rejection from unhandled runtime error middleware (HTTP 500).",
+      "Always explicitly return after sending HTTP responses in Express to prevent unhandled rejection crashes."
     ],
     "strugglesAndFixes": [
       "Missing return statements after response calls caused Express execution to fall through and trigger internal crash logs.",
       "Zod safeParse returns an object with success and error formatting rather than throwing uncaught exceptions."
     ],
-    "formattedMarkdown": "# Day ${currentDayNumber} - Multi-Layer Validation and Error Handling\\n\\nImplemented 4-layer validation strategy in Express using Zod safeParse."
+    "formattedMarkdown": "# Day ${currentDayNumber} - Multi-Layer Validation and Error Handling\\n\\n## Architecture: 4 Validation Layers\\n1. **API / DTO Layer (Verified Implementation)**: Zod schema parsing rejects malformed input early (HTTP 400 Bad Request).\\n2. **Controller / Context Layer (Verified Implementation)**: Context and role authorization checks block unauthorized actions (HTTP 403 Forbidden).\\n3. **Domain / Service Layer (Verified Implementation)**: Business logic checks existing state to prevent duplicate entities (HTTP 422 Unprocessable Entity).\\n4. **Persistence / Database Layer (Studied / Documented)**: Database constraints serve as the ultimate failsafe; documented in notes and simulated in-memory without executable SQL schema.\\n\\n## Centralized Error Handling\\nA dedicated 4-parameter Express error middleware handles unexpected runtime failures and sends HTTP 500 without leaking stack traces.\\n\\n## Learning & Debugging Reflections\\nMissing \`return\` statements in Express route handlers caused double responses and unhandled promise rejections during testing."
   }
 }`;
 
@@ -228,9 +245,17 @@ Output JSON format:
   const stage3Prompt = `You are a strict code verification auditor.
 Audit the proposed Engineering Log entry against the actual files in the repository.
 
-CRITICAL RULE:
-- The author's personal note is evidence of what they REPORT doing (learning experience, struggles).
+CRITICAL RULES:
+- The author's personal note is evidence of what they REPORT doing (learning experience, struggles, 4 layers described).
 - The executable code (server.js) and test cases in README VERIFY what the implementation ACTUALLY demonstrates.
+- CHECK FOR LAYER 4 MISMATCH:
+  The author's notes define 4 layers implemented: API/DTO (400), Controller/context (403), Domain/service (422), and Persistence/database constraints.
+  However, server.js only implements Layers 1-3 (Zod, auth, duplicate check) and centralized error middleware (500).
+  Layer 4 (database constraints) has NO executable SQL schema in the repository (state is an in-memory array).
+  Therefore, the audit MUST flag this discrepancy:
+  • You MUST put this finding in "flaggedUnsupportedClaims": ["Layer 4 (Persistence / Database constraints) is documented in the learning note, but is not verified by executable SQL schema or database migrations in this repository (simulated in-memory)."]
+  • You MUST return "recommendation": "WARN" (do NOT return PASS, because Layer 4 lacks executable code verification).
+  • In "explanation", explicitly note that Layers 1-3 and error middleware are verified implementations, while Layer 4 remains studied/documented rather than verified by executable code.
 
 [PROPOSED ENTRY]
 ${JSON.stringify(parsedStage2.entry, null, 2)}
@@ -256,10 +281,10 @@ Task:
       "filePath": "${primaryExecutable?.filePath || 'backend/day-21-validation-errors/server.js'}",
       "category": "executable_implementation",
       "verifiedCapabilities": [
-        "Zod schema validation on DTO inputs returning HTTP 400 Bad Request with result.error.format()",
-        "Role-based check for admin accounts returning HTTP 403 Forbidden",
-        "In-memory uniqueness check for users returning HTTP 422 Unprocessable Entity",
-        "Express 4-parameter error handler middleware returning HTTP 500"
+        "Layer 1 (API/DTO): Zod schema validation on DTO inputs returning HTTP 400 Bad Request with result.error.format()",
+        "Layer 2 (Controller/Context): Role-based check for admin accounts returning HTTP 403 Forbidden",
+        "Layer 3 (Domain/Service): In-memory uniqueness check for users returning HTTP 422 Unprocessable Entity",
+        "Error Handling: Express 4-parameter error handler middleware returning HTTP 500"
       ],
       "relevantCodeSnippet": "const result = apiValidation.safeParse(req.body);\\nif (!result.success) {\\n  return res.status(400).json({ success: false, Message: 'Your input values are wrong', error: result.error.format() });\\n}"
     },
@@ -275,17 +300,18 @@ Task:
       "relevantCodeSnippet": "## Test Cases\\n### For 400 bad request Name\\nname is required and cannot be empty\\nstatus : 400 Bad Request"
     }
   ],
-  "distinctionAnalysis": "The executable code in server.js demonstrates the live Express implementation of Zod DTO validation, controller checks, domain conflict handling, and error middleware. The README and personal note document the test execution results, rules of validation, and the developer's experience resolving unhandled return bugs.",
+  "distinctionAnalysis": "Executable code in server.js demonstrates live Express implementation for Layers 1-3 (Zod DTO validation, controller authorization, domain conflict handling) and centralized error middleware. The README and personal note document the conceptual 4-layer model and learning reflections. Layer 4 (database constraints) is documented but lacks executable SQL schema evidence.",
   "verifiedClaims": [
-    "Implemented 4-layer validation strategy using Zod safeParse in Express",
-    "Returns HTTP 400 Bad Request with structured error format on invalid inputs",
-    "Returns HTTP 403 Forbidden for unauthorized admin role creation",
-    "Returns HTTP 422 Unprocessable Entity when user already exists",
-    "Centralized error handling middleware catches unhandled server crashes"
+    "Layer 1 (API/DTO): Implemented Zod safeParse validation returning HTTP 400 Bad Request with structured errors",
+    "Layer 2 (Controller/Context): Implemented authorization check returning HTTP 403 Forbidden for admin role",
+    "Layer 3 (Domain/Service): Implemented conflict check returning HTTP 422 Unprocessable Entity for existing users",
+    "Error Handling: Implemented centralized 4-parameter Express error handling middleware returning HTTP 500"
   ],
-  "flaggedUnsupportedClaims": [],
-  "recommendation": "PASS",
-  "explanation": "All claims in the proposed entry are substantiated by the executable implementation in server.js and test documentation in README.md."
+  "flaggedUnsupportedClaims": [
+    "Layer 4 (Persistence / Database constraints) is documented in the daily learning note, but is not verified by executable SQL schema or database migrations in this repository (simulated in-memory)."
+  ],
+  "recommendation": "WARN",
+  "explanation": "Layers 1-3 (Zod DTO, authorization, duplicate check) and centralized error middleware are verified by executable code in server.js. Layer 4 (database persistence constraints) is documented in notes but not implemented with an executable SQL schema in this repository, triggering an audit WARN."
 }`;
 
   const stage3Response = await callOllama(
@@ -298,23 +324,43 @@ Task:
 
   const parsedAudit = JSON.parse(stage3Response);
 
+  // Ensure arrays and strings exist
+  if (!Array.isArray(parsedAudit.evidenceByFile)) parsedAudit.evidenceByFile = [];
+  if (!Array.isArray(parsedAudit.verifiedClaims)) parsedAudit.verifiedClaims = [];
+  if (!Array.isArray(parsedAudit.flaggedUnsupportedClaims)) parsedAudit.flaggedUnsupportedClaims = [];
+
+  // Deterministic safeguard: If repository lacks SQL schema evidence for Layer 4, ensure it is flagged
+  if (evidence.schemaFiles.length === 0) {
+    const layer4Flag =
+      'Layer 4 (Persistence / Database constraints) is documented in learning notes, but is not verified by executable SQL schema or database migrations in this repository (simulated in-memory).';
+    if (
+      !parsedAudit.flaggedUnsupportedClaims.some(
+        (c: string) =>
+          c.toLowerCase().includes('layer 4') ||
+          c.toLowerCase().includes('persistence') ||
+          c.toLowerCase().includes('database')
+      )
+    ) {
+      parsedAudit.flaggedUnsupportedClaims.push(layer4Flag);
+    }
+  }
+
   // Normalize recommendation to strict PASS | WARN | FAIL enum
-  if (typeof parsedAudit.recommendation === 'string') {
+  if (parsedAudit.flaggedUnsupportedClaims.length > 0) {
+    parsedAudit.recommendation = 'WARN';
+  } else if (typeof parsedAudit.recommendation === 'string') {
     const rec = parsedAudit.recommendation.toUpperCase();
-    if (rec.includes('PASS')) parsedAudit.recommendation = 'PASS';
-    else if (rec.includes('FAIL')) parsedAudit.recommendation = 'FAIL';
+    if (rec.includes('FAIL')) parsedAudit.recommendation = 'FAIL';
+    else if (rec.includes('WARN')) parsedAudit.recommendation = 'WARN';
+    else if (rec.includes('PASS')) parsedAudit.recommendation = 'PASS';
     else parsedAudit.recommendation = 'WARN';
   } else {
     parsedAudit.recommendation = 'WARN';
   }
 
-  // Ensure arrays and strings exist
-  if (!Array.isArray(parsedAudit.evidenceByFile)) parsedAudit.evidenceByFile = [];
-  if (!Array.isArray(parsedAudit.verifiedClaims)) parsedAudit.verifiedClaims = [];
-  if (!Array.isArray(parsedAudit.flaggedUnsupportedClaims)) parsedAudit.flaggedUnsupportedClaims = [];
   if (!parsedAudit.distinctionAnalysis) {
     parsedAudit.distinctionAnalysis =
-      'Executable code in server.js demonstrates 4-tier validation and error middleware; README documentation and personal note provide test cases and developer experience.';
+      'Executable code in server.js proves Layers 1-3 validation and centralized 500 error middleware. Notes and README document the conceptual 4-layer model; Layer 4 persistence constraints remain studied/documented without executable SQL schema in this folder.';
   }
   if (!parsedAudit.explanation) {
     parsedAudit.explanation = 'Claims audited against repository code and documentation.';
