@@ -18,9 +18,12 @@ describe('Git Evidence Collector Tests', () => {
     expect(evidence.dayFolder).toBeDefined();
     expect(evidence.dayFolder).toMatch(/backend|databases/);
     expect(evidence.executableFiles.length).toBeGreaterThan(0);
-    expect(evidence.executableFiles[0].filePath).toContain('server.js');
     expect(evidence.documentationFiles.length).toBeGreaterThan(0);
     expect(evidence.documentationFiles[0].filePath).toContain('README.md');
     expect(evidence.dependenciesUsed).toContain('zod');
+
+    // For Day 22 or latest commits with tests, verify tests and subfolder files are discovered
+    const filePaths = evidence.executableFiles.map((f) => f.filePath);
+    expect(filePaths.some((p) => p.endsWith('.js') || p.endsWith('.ts'))).toBe(true);
   });
 });

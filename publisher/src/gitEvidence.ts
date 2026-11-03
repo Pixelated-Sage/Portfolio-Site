@@ -31,6 +31,23 @@ export interface LabEvidence {
   schemaFiles: InspectedFileEvidence[];
   documentationFiles: InspectedFileEvidence[];
   dependenciesUsed: string[];
+  testExecutionSummary?: string;
+}
+
+function getFilesRecursively(dir: string, baseDir: string = dir): string[] {
+  let results: string[] = [];
+  if (!fs.existsSync(dir)) return results;
+  const entries = fs.readdirSync(dir, { withFileTypes: true });
+  for (const entry of entries) {
+    if (entry.name === 'node_modules' || entry.name === '.git' || entry.name === 'dist') continue;
+    const fullPath = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      results = results.concat(getFilesRecursively(fullPath, baseDir));
+    } else {
+      results.push(path.relative(baseDir, fullPath));
+    }
+  }
+  return results;
 }
 
 export function collectLabEvidence(
@@ -141,37 +158,58 @@ export function collectLabEvidence(
   const schemaFiles: InspectedFileEvidence[] = [];
   const documentationFiles: InspectedFileEvidence[] = [];
   const dependenciesUsed: string[] = [];
+  let testExecutionSummary: string | undefined;
 
   if (fs.existsSync(dayFolderPath)) {
-    const folderEntries = fs.readdirSync(dayFolderPath);
+    const allRelativeFiles = getFilesRecursively(dayFolderPath);
 
     // 1. Inspect Package.json dependencies
-    if (folderEntries.includes('package.json')) {
+    if (allRelativeFiles.includes('package.json')) {
       try {
         const pkgContent = fs.readFileSync(path.join(dayFolderPath, 'package.json'), 'utf-8');
         const pkg = JSON.parse(pkgContent);
         if (pkg.dependencies) {
           dependenciesUsed.push(...Object.keys(pkg.dependencies));
         }
+        if (pkg.devDependencies) {
+          dependenciesUsed.push(...Object.keys(pkg.devDependencies));
+        }
       } catch {
         // ignore
       }
     }
 
-    // 2. Inspect Executable Implementation (server.js, *.js, *.ts)
-    const executableCandidates = folderEntries.filter(
-      (f) =>
-        (f.endsWith('.js') || f.endsWith('.ts')) &&
-        !f.includes('test') &&
-        !f.includes('.config.')
+    // 2. Inspect Executable Implementation & Automated Tests
+    const codeCandidates = allRelativeFiles.filter(
+      (f) => (f.endsWith('.js') || f.endsWith('.ts')) && !f.includes('.config.')
     );
 
-    for (const fileName of executableCandidates) {
-      const fullPath = path.join(dayFolderPath, fileName);
-      const relativePath = path.join(dayFolder, fileName);
+    for (const relativeInDay of codeCandidates) {
+      const fullPath = path.join(dayFolderPath, relativeInDay);
+      const relativePath = path.join(dayFolder, relativeInDay);
       const content = fs.readFileSync(fullPath, 'utf-8');
 
       const sections: { title: string; snippet: string }[] = [];
+
+      // Extract Automated Test suites & test cases
+      if (relativeInDay.includes('test') || relativeInDay.includes('spec')) {
+        const testMatches = content.match(/(?:describe|it|test)\s*\(\s*['"`]([\s\S]*?)['"`]\s*,\s*(?:async\s*)?\(\s*\)\s*=>/g);
+        if (testMatches) {
+          for (const t of testMatches) {
+            sections.push({
+              title: `Test Case (${t.replace(/,\s*(?:async\s*)?\(\s*\)\s*=>/, '').trim()})`,
+              snippet: t,
+            });
+          }
+        }
+        const assertions = content.match(/expect\([\s\S]*?\)\.(?:toBe|toEqual|toMatchObject|toThrow)\([\s\S]*?\);?/g);
+        if (assertions && assertions.length > 0) {
+          sections.push({
+            title: `Assertions (${assertions.length} assertion checks found)`,
+            snippet: assertions.slice(0, 5).join('\n'),
+          });
+        }
+      }
 
       // Extract Zod validation schema definition
       const zodMatch = content.match(/const\s+\w*validation\w*\s*=\s*z\.object\([\s\S]*?\n\s*\);?/i);
@@ -211,11 +249,29 @@ export function collectLabEvidence(
       });
     }
 
-    // 3. Inspect Database Schemas (*.sql, schema.sql, queries.sql)
-    const sqlCandidates = folderEntries.filter((f) => f.endsWith('.sql'));
-    for (const fileName of sqlCandidates) {
-      const fullPath = path.join(dayFolderPath, fileName);
-      const relativePath = path.join(dayFolder, fileName);
+    // 3. Inspect Automated Test Suite Execution (if tests are present)
+    const hasTests = allRelativeFiles.some((f) => f.includes('test') && (f.endsWith('.js') || f.endsWith('.ts')));
+    if (hasTests) {
+      try {
+        const testRunOutput = execSync(`cd "${dayFolderPath}" && npx vitest run`, {
+          encoding: 'utf-8',
+          timeout: 15000,
+          stdio: ['ignore', 'pipe', 'pipe'],
+        });
+        const passedMatch = testRunOutput.match(/Tests\s+(\d+\s+passed(?:\s*\(\d+\))?)/i);
+        if (passedMatch) {
+          testExecutionSummary = `Vitest automated run: ${passedMatch[1]}`;
+        }
+      } catch {
+        // Test run optional, don't fail evidence collection
+      }
+    }
+
+    // 4. Inspect Database Schemas (*.sql, schema.sql, queries.sql)
+    const sqlCandidates = allRelativeFiles.filter((f) => f.endsWith('.sql'));
+    for (const relativeInDay of sqlCandidates) {
+      const fullPath = path.join(dayFolderPath, relativeInDay);
+      const relativePath = path.join(dayFolder, relativeInDay);
       const content = fs.readFileSync(fullPath, 'utf-8');
 
       const sections: { title: string; snippet: string }[] = [];
@@ -235,30 +291,24 @@ export function collectLabEvidence(
       });
     }
 
-    // 4. Inspect Documentation (README.md)
-    if (folderEntries.includes('README.md')) {
-      const fullPath = path.join(dayFolderPath, 'README.md');
-      const relativePath = path.join(dayFolder, 'README.md');
+    // 5. Inspect Documentation (*.md, README.md)
+    const mdCandidates = allRelativeFiles.filter((f) => f.endsWith('.md'));
+    for (const relativeInDay of mdCandidates) {
+      const fullPath = path.join(dayFolderPath, relativeInDay);
+      const relativePath = path.join(dayFolder, relativeInDay);
       const content = fs.readFileSync(fullPath, 'utf-8');
 
       const sections: { title: string; snippet: string }[] = [];
 
-      // Extract rules of validation
-      const rulesMatch = content.match(/##\s*Rules of Validation[\s\S]*?(?=##|$)/i);
-      if (rulesMatch) {
-        sections.push({
-          title: 'Validation Rules',
-          snippet: rulesMatch[0].trim(),
-        });
-      }
-
-      // Extract test cases
-      const testCasesMatch = content.match(/##\s*Test Cases[\s\S]*?(?=##|$)/i);
-      if (testCasesMatch) {
-        sections.push({
-          title: 'Documented Test Cases',
-          snippet: testCasesMatch[0].slice(0, 1000).trim(),
-        });
+      // Extract major markdown headings (## Section Title)
+      const headingMatches = Array.from(content.matchAll(/##\s*([^\n]+)\n([\s\S]*?)(?=##|$)/g));
+      if (headingMatches.length > 0) {
+        for (const h of headingMatches) {
+          sections.push({
+            title: h[1].trim(),
+            snippet: h[2].trim().slice(0, 800),
+          });
+        }
       }
 
       documentationFiles.push({
@@ -281,5 +331,6 @@ export function collectLabEvidence(
     schemaFiles,
     documentationFiles,
     dependenciesUsed,
+    testExecutionSummary,
   };
 }

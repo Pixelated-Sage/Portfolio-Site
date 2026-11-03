@@ -103,7 +103,8 @@ export async function main() {
   console.log(`📅 Target Entry: Day ${targetDay} (${entryDate})`);
 
   // 6. Check for Duplicates
-  const slug = `day-${targetDay}-validation-errors`;
+  const folderName = evidence.dayFolder ? path.basename(evidence.dayFolder) : `day-${targetDay}`;
+  const slug = folderName.toLowerCase().replace(/[^a-z0-9-]+/g, '-');
   const dupCheck = await isEntryDuplicate(targetDay, entryDate, slug);
   if (dupCheck.duplicate) {
     console.warn(`⚠️ Warning: Duplicate detected: ${dupCheck.reason}`);
@@ -126,6 +127,7 @@ export async function main() {
     evidence,
     currentDayNumber: targetDay,
     entryDate,
+    slug,
   });
 
   const { entry, activityRecord, formattedNote, auditReport } = pipelineResult;
