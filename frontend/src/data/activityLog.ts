@@ -12,6 +12,17 @@ export interface ActivityRecord {
 
 export const activityRecords: ActivityRecord[] = [
   {
+    "date": "2026-11-03",
+    "title": "Day 22: Automated API Integration Testing with Vitest and Supertest",
+    "topic": "Backend Architecture",
+    "commitHash": "50f52e2",
+    "commitMessage": "did api testing just the base but made 7 tests and all working fine , will continue in upcoming days",
+    "commitUrl": "https://github.com/Pixelated-Sage/abhishek-engineering-labs/commit/50f52e258e486817b5542503a15c5b089c525a93",
+    "exercisePath": "backend/day-22-automated-API-Testing",
+    "status": "verified",
+    "summary": "Built automated integration test suite with Vitest and Supertest verifying 6 API test cases across status codes 200, 201, 400, 422, and 404."
+  },
+  {
     "date": "2026-10-25",
     "title": "Day 21: Multi-Layer Validation and Error Handling",
     "topic": "Backend Architecture",
@@ -249,6 +260,12 @@ export function computeStreakStats(): StreakStats {
 }
 
 export const recentMilestones = [
+  {
+    date: "Nov 3, 2026",
+    title: "Day 22: Automated API Integration Testing with Vitest and Supertest",
+    summary: "Built automated integration test suite with Vitest and Supertest verifying 6 API test cases across status codes 200, 201, 400, 422, and 404.",
+    exercise: "backend/day-22-automated-API-Testing",
+  },
   {
     date: "Oct 25, 2026",
     title: "Day 21: Multi-Layer Validation and Error Handling",

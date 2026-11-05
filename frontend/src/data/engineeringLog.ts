@@ -26,6 +26,35 @@ export interface EngineeringEntry {
 
 export const engineeringLogData: EngineeringEntry[] = [
   {
+    "id": "day-22",
+    "slug": "day-22-automated-api-testing",
+    "dayNumber": 22,
+    "date": "2026-11-03",
+    "title": "Day 22: Automated API Integration Testing with Vitest and Supertest",
+    "topic": "Backend Architecture",
+    "status": "completed",
+    "summary": "Implemented automated integration testing for Express REST API endpoints using Vitest and Supertest, establishing reproducible test suites for success flows, Zod validation errors, duplicate conflicts, and 404 boundaries.",
+    "keyTakeaway": "Automating API integration tests with Supertest and Vitest verifies route handlers, validation schemas, and error boundaries in milliseconds without spawning external network listeners.",
+    "details": [
+      "Test Harness Setup: Configured Vitest and Supertest against the Express application (src/app.js), enabling ephemeral in-memory HTTP requests directly against route middleware.",
+      "Endpoint Status Code Coverage: Authored 6 automated integration tests asserting HTTP 200 OK (/health), HTTP 201 Created (/users), HTTP 400 Bad Request (invalid name and malformed email), HTTP 422 Unprocessable Entity (duplicate user), and HTTP 404 Not Found.",
+      "Zod Schema Error Assertions: Used Vitest's toMatchObject matcher to verify exact nested Zod error formatting structures returned to API consumers.",
+      "Testing Paradigms & Developer Experience: Differentiated isolated unit testing from end-to-end integration testing, automating assertions to catch regressions instantly during backend development."
+    ],
+    "codeSnippet": {
+      "language": "javascript",
+      "code": "describe(\"POST /users\", () => {\n  it(\"should try to create a user with invalid name and recieve 400\", async () => {\n    const userData = {\n      name: \"Abh\",\n      email: \"abhishekaj5904@gmail.com\",\n      role: \"user\"\n    };\n    const response = await request(app)\n      .post(\"/users\")\n      .send(userData);\n\n    expect(response.status).toBe(400);\n    expect(response.body.success).toBe(false);\n    expect(response.body).toMatchObject({\n      success: false,\n      Message: \"Your input values are wrong\",\n      error: {\n        name: {\n          _errors: [\"Name cannot be empty or just space\"]\n        }\n      }\n    });\n  });\n});",
+      "caption": "Automated integration test for invalid DTO payload using Supertest and Vitest (app.api.test.js)"
+    },
+    "evidenceCommit": {
+      "hash": "50f52e2",
+      "date": "2026-11-03",
+      "message": "did api testing just the base but made 7 tests and all working fine , will continue in upcoming days",
+      "url": "https://github.com/Pixelated-Sage/abhishek-engineering-labs/commit/50f52e258e486817b5542503a15c5b089c525a93"
+    },
+    "repoPath": "backend/day-22-automated-API-Testing"
+  },
+  {
     "id": "day-21",
     "slug": "day-21-validation-errors",
     "dayNumber": 21,
