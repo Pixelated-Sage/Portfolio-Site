@@ -9,10 +9,39 @@ export const ActivityWidget: React.FC = () => {
     stats.daysLookup[stats.latestVerifiedDate] || null
   );
 
-  // Generate calendar days covering the lab period from Sept 14, 2026 to Oct 25, 2026
-  const calendarDays: { dateStr: string; dayNum: number; record?: ActivityRecord }[] = [];
-  const startDate = new Date(2026, 8, 14); // Sep 14, 2026 (Monday)
-  const endDate = new Date(2026, 9, 25);   // Oct 25, 2026 (Sunday)
+  // Dynamically compute calendar days spanning from the start of the learning journey to the current week
+  const calendarDays: {
+    dateStr: string;
+    dayNum: number;
+    monthAbbr: string;
+    year: number;
+    record?: ActivityRecord;
+  }[] = [];
+
+  const monthNames = [
+    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+    'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec',
+  ];
+
+  const earliestDateStr = stats.verifiedDatesList[0] || '2026-09-14';
+  const startDate = new Date(earliestDateStr + 'T00:00:00');
+  const startDay = startDate.getDay();
+  // Align start date to Monday (1)
+  startDate.setDate(startDate.getDate() - (startDay === 0 ? 6 : startDay - 1));
+
+  // Determine latest date to display (cover at least latest verified record or today)
+  const latestVerified = stats.latestVerifiedDate
+    ? new Date(stats.latestVerifiedDate + 'T00:00:00')
+    : new Date();
+  const now = new Date();
+  const targetEnd = latestVerified > now ? latestVerified : now;
+
+  const endDate = new Date(targetEnd);
+  const endDay = endDate.getDay();
+  // Align end date to Sunday (0) so calendar grid rows are complete
+  if (endDay !== 0) {
+    endDate.setDate(endDate.getDate() + (7 - endDay));
+  }
 
   const cur = new Date(startDate);
   while (cur <= endDate) {
@@ -23,10 +52,14 @@ export const ActivityWidget: React.FC = () => {
     calendarDays.push({
       dateStr,
       dayNum: cur.getDate(),
+      monthAbbr: monthNames[cur.getMonth()],
+      year,
       record: stats.daysLookup[dateStr],
     });
     cur.setDate(cur.getDate() + 1);
   }
+
+  const rangeLabel = `${monthNames[startDate.getMonth()]} ${startDate.getDate()} — ${monthNames[endDate.getMonth()]} ${endDate.getDate()}, ${endDate.getFullYear()}`;
 
   return (
     <div className="bg-[#FFFFFF] rounded-xl border border-[#E2E6EE] p-5 sm:p-6 shadow-xs">
@@ -73,7 +106,7 @@ export const ActivityWidget: React.FC = () => {
       {/* Calendar Grid Representation */}
       <div className="pt-5">
         <div className="flex items-center justify-between text-xs text-[#606978] mb-2 font-mono">
-          <span>Sept 14 — Oct 25, 2026</span>
+          <span>{rangeLabel}</span>
           <div className="flex items-center gap-3">
             <span className="flex items-center gap-1.5">
               <span className="w-2.5 h-2.5 rounded-sm bg-[#EEF2F8] border border-[#E2E6EE] inline-block"></span>
@@ -104,16 +137,23 @@ export const ActivityWidget: React.FC = () => {
                 onClick={() => item.record && setSelectedRecord(item.record)}
                 title={
                   isVerified
-                    ? `${item.dateStr}: ${item.record?.title}`
-                    : `${item.dateStr}: No lab entry recorded`
+                    ? `${item.monthAbbr} ${item.dayNum}, ${item.year}: ${item.record?.title}`
+                    : `${item.monthAbbr} ${item.dayNum}, ${item.year}: No lab entry recorded`
                 }
-                className={`relative h-8 rounded text-xs font-mono transition-all flex flex-col items-center justify-center ${
+                className={`relative h-8 sm:h-9 rounded text-xs font-mono transition-all flex flex-col items-center justify-center p-0.5 ${
                   isVerified
                     ? 'bg-[#315EFB] text-white hover:bg-[#2449CF] cursor-pointer font-medium shadow-xs'
                     : 'bg-[#EEF2F8] text-[#606978]/60 cursor-default'
                 } ${isSelected ? 'ring-2 ring-offset-2 ring-[#315EFB]' : ''}`}
               >
-                <span>{item.dayNum}</span>
+                <span className="flex items-center gap-0.5 text-[11px] leading-tight">
+                  {item.dayNum === 1 && (
+                    <span className={`text-[8px] uppercase font-bold tracking-tight ${isVerified ? 'text-amber-300' : 'text-[#315EFB]'}`}>
+                      {item.monthAbbr.slice(0, 3)}
+                    </span>
+                  )}
+                  <span>{item.dayNum}</span>
+                </span>
                 {isVerified && (
                   <span className="w-1 h-1 bg-white rounded-full mt-0.5"></span>
                 )}
