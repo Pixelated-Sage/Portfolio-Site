@@ -22,35 +22,20 @@ describe('Database publishing records and duplicate handling', () => {
     dayNumber: 999,
     date: '2026-10-26',
     title: 'Test Entry',
-    status: 'COMPLETE',
-    topic: 'Backend Development',
-    summary: 'Testing database idempotency and reruns',
-    sourceMaterials: {
-      type: 'DAILY_NOTES',
-      references: ['input/today.md'],
-    },
+    status: 'completed',
+    topic: 'Backend Architecture',
+    summary: 'Testing database idempotency and reruns for testing suite',
+    keyTakeaway: 'Idempotency ensures safe reruns without duplicate constraint violations.',
+    details: [
+      'Detail 1: Testing database integration',
+      'Detail 2: Verifying rejection status and rerun flexibility'
+    ],
+    repoPath: 'backend/day-999-test',
     evidenceCommit: {
       hash: 'abcdef1234567890abcdef1234567890abcdef12',
-      shortHash: 'abcdef1',
       date: '2026-10-26',
       message: 'test commit',
-      stats: '1 file changed',
-    },
-    sections: {
-      problemStatement: 'Problem statement',
-      solutionApproach: 'Solution approach',
-      keyDecisions: ['Decision 1'],
-      challengesFaced: ['Challenge 1'],
-      technicalTakeaways: ['Takeaway 1'],
-      verifiedEvidence: [
-        {
-          repository: 'test-repo',
-          filePath: 'test.ts',
-          evidenceCategory: 'executable_implementation',
-          verifiedCapability: 'Capability 1',
-          codeSnippet: 'const x = 1;',
-        },
-      ],
+      url: 'https://github.com/Pixelated-Sage/abhishek-engineering-labs/commit/abcdef1',
     },
   };
 
@@ -75,8 +60,9 @@ describe('Database publishing records and duplicate handling', () => {
     dayNumber: 999,
     date: '2026-10-26',
     title: 'Test Formatted Note',
-    topic: 'Backend Development',
+    topic: 'Backend Architecture',
     keyLearnings: ['Learned X'],
+    strugglesAndFixes: ['Fixed issue with types'],
     formattedMarkdown: '# Test Note',
   };
 

@@ -50,9 +50,43 @@ function getFilesRecursively(dir: string, baseDir: string = dir): string[] {
   return results;
 }
 
+export function extractDayFolderFromCommit(commit: CommitEvidence, targetDay?: number): string | undefined {
+  if (targetDay !== undefined) {
+    const dayRegex = new RegExp(`day-0*${targetDay}(?:[^/]*)$`, 'i');
+    for (const f of commit.changedFiles) {
+      const match = f.match(/((?:backend|databases)\/[^/]+)/);
+      if (match && dayRegex.test(match[1])) {
+        return match[1];
+      }
+    }
+  }
+
+  // Count frequencies of matched folders across changed files
+  const folderCounts: Record<string, number> = {};
+  for (const f of commit.changedFiles) {
+    const match = f.match(/((?:backend|databases)\/[^/]+)/);
+    if (match) {
+      const folder = match[1];
+      folderCounts[folder] = (folderCounts[folder] || 0) + 1;
+    }
+  }
+
+  let bestFolder: string | undefined;
+  let maxCount = -1;
+  for (const [folder, count] of Object.entries(folderCounts)) {
+    if (count > maxCount) {
+      maxCount = count;
+      bestFolder = folder;
+    }
+  }
+  return bestFolder;
+}
+
 export function collectLabEvidence(
   labRepoPath: string,
-  sinceHash?: string
+  sinceHash?: string,
+  targetCommit?: CommitEvidence,
+  explicitDayFolder?: string
 ): LabEvidence {
   if (!fs.existsSync(labRepoPath)) {
     throw new Error(`Engineering lab repository not found at: ${labRepoPath}`);
@@ -60,92 +94,93 @@ export function collectLabEvidence(
 
   const repositoryName = 'abhishek-engineering-labs';
 
-  // Determine git log range
-  let logRange = '-n 5';
-  if (sinceHash) {
-    try {
-      execSync(`git -C "${labRepoPath}" rev-parse --verify "${sinceHash}"`, {
-        stdio: 'ignore',
-      });
-      logRange = `${sinceHash}..HEAD`;
-    } catch {
-      logRange = '-n 5';
+  let commits: CommitEvidence[] = [];
+
+  if (targetCommit) {
+    commits = [targetCommit];
+  } else {
+    // Determine git log range
+    let logRange = '-n 5';
+    if (sinceHash) {
+      try {
+        execSync(`git -C "${labRepoPath}" rev-parse --verify "${sinceHash}"`, {
+          stdio: 'ignore',
+        });
+        logRange = `${sinceHash}..HEAD`;
+      } catch {
+        logRange = '-n 5';
+      }
     }
-  }
 
-  // Get commits list
-  const format = '%H|%an|%ad|%s';
-  const logOutput = execSync(
-    `git -C "${labRepoPath}" log ${logRange} --date=iso --pretty=format:"${format}"`,
-    { encoding: 'utf-8' }
-  ).trim();
-
-  const commitLines = logOutput ? logOutput.split('\n').filter(Boolean) : [];
-  if (commitLines.length === 0) {
-    const headOutput = execSync(
-      `git -C "${labRepoPath}" log -n 1 --date=iso --pretty=format:"${format}"`,
+    // Get commits list
+    const format = '%H|%an|%ad|%s';
+    const logOutput = execSync(
+      `git -C "${labRepoPath}" log ${logRange} --date=iso --pretty=format:"${format}"`,
       { encoding: 'utf-8' }
     ).trim();
-    if (!headOutput) {
-      throw new Error('No commits found in engineering lab repository.');
+
+    const commitLines = logOutput ? logOutput.split('\n').filter(Boolean) : [];
+    if (commitLines.length === 0) {
+      const headOutput = execSync(
+        `git -C "${labRepoPath}" log -n 1 --date=iso --pretty=format:"${format}"`,
+        { encoding: 'utf-8' }
+      ).trim();
+      if (!headOutput) {
+        throw new Error('No commits found in engineering lab repository.');
+      }
+      commitLines.push(headOutput);
     }
-    commitLines.push(headOutput);
-  }
 
-  const commits: CommitEvidence[] = [];
-  for (const line of commitLines) {
-    const [hash, author, dateStr, message] = line.split('|');
-    if (!hash) continue;
+    for (const line of commitLines) {
+      const [hash, author, dateStr, message] = line.split('|');
+      if (!hash) continue;
 
-    const dateTime = new Date(dateStr);
-    const date = dateTime.toISOString().split('T')[0];
-    const shortHash = hash.slice(0, 7);
+      const dateTime = new Date(dateStr);
+      const date = dateTime.toISOString().split('T')[0];
+      const shortHash = hash.slice(0, 7);
 
-    // Get changed files
-    const filesOutput = execSync(
-      `git -C "${labRepoPath}" show --name-only --oneline "${hash}"`,
-      { encoding: 'utf-8' }
-    );
-    const changedFiles = filesOutput
-      .split('\n')
-      .slice(1)
-      .map((f) => f.trim())
-      .filter(Boolean);
+      // Get changed files
+      const filesOutput = execSync(
+        `git -C "${labRepoPath}" show --name-only --oneline "${hash}"`,
+        { encoding: 'utf-8' }
+      );
+      const changedFiles = filesOutput
+        .split('\n')
+        .slice(1)
+        .map((f) => f.trim())
+        .filter(Boolean);
 
-    // Get concise diff summary
-    const diffStat = execSync(
-      `git -C "${labRepoPath}" show --stat --oneline "${hash}"`,
-      { encoding: 'utf-8' }
-    )
-      .split('\n')
-      .slice(1, 15)
-      .join('\n');
+      // Get concise diff summary
+      const diffStat = execSync(
+        `git -C "${labRepoPath}" show --stat --oneline "${hash}"`,
+        { encoding: 'utf-8' }
+      )
+        .split('\n')
+        .slice(1, 15)
+        .join('\n');
 
-    commits.push({
-      hash,
-      shortHash,
-      date,
-      dateTime,
-      author,
-      message,
-      changedFiles,
-      diffSummary: diffStat,
-    });
+      commits.push({
+        hash,
+        shortHash,
+        date,
+        dateTime,
+        author,
+        message,
+        changedFiles,
+        diffSummary: diffStat,
+      });
+    }
   }
 
   const latestCommit = commits[0];
 
   // Locate the relevant day folder
-  let dayFolder: string | undefined;
-  for (const c of commits) {
-    for (const f of c.changedFiles) {
-      const match = f.match(/((?:backend|databases)\/[^/]+)/);
-      if (match) {
-        dayFolder = match[1];
-        break;
-      }
+  let dayFolder: string | undefined = explicitDayFolder;
+  if (!dayFolder) {
+    for (const c of commits) {
+      dayFolder = extractDayFolderFromCommit(c);
+      if (dayFolder) break;
     }
-    if (dayFolder) break;
   }
 
   // If day folder not in latest commits, fallback to most recently modified folder
