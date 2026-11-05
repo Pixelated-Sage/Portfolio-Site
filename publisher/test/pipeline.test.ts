@@ -87,5 +87,5 @@ describe('Publishing Pipeline Integration Test', () => {
     expect(output.auditReport.recommendation).toBeDefined();
     expect(output.auditReport.distinctionAnalysis).toBeDefined();
     expect(output.auditReport.distinctionAnalysis.length).toBeGreaterThan(10);
-  }, 120000); // 120s timeout for local Ollama inference
+  }, 180000); // 180s timeout for local Ollama inference
 });

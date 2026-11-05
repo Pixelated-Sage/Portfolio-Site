@@ -21,7 +21,7 @@ export const HomePage: React.FC = () => {
             {/* Status Pill */}
             <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-[#EEF2F8] border border-[#E2E6EE] text-xs font-mono text-[#171B26] mb-5">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span>Available for Backend Engineering Roles & Internships</span>
+              <span>Software Trainee at lotasol Technologies • Joined Nov 2026</span>
             </div>
 
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[#171B26] leading-tight">

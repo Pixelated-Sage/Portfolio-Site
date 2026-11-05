@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Briefcase,
   GraduationCap,
   Award,
   ShieldCheck,
@@ -38,6 +39,57 @@ export const AboutPage: React.FC = () => {
         <div className="space-y-3.5 text-sm sm:text-base text-[#606978] leading-relaxed">
           {profileData.bioLong.map((para, idx) => (
             <p key={idx}>{para}</p>
+          ))}
+        </div>
+      </section>
+
+      {/* Professional Experience */}
+      <section className="space-y-4">
+        <h2 className="text-xl font-bold text-[#171B26] flex items-center gap-2">
+          <Briefcase className="w-5 h-5 text-[#315EFB]" />
+          <span>Professional Experience</span>
+        </h2>
+        <div className="space-y-4">
+          {profileData.experience.map((exp, idx) => (
+            <div
+              key={idx}
+              className="p-5 sm:p-6 rounded-xl bg-[#FFFFFF] border border-[#E2E6EE] text-left space-y-3"
+            >
+              <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-1">
+                <div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h3 className="font-semibold text-base sm:text-lg text-[#171B26]">
+                      {exp.role}
+                    </h3>
+                    {exp.current && (
+                      <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 font-semibold border border-emerald-200">
+                        Current Role
+                      </span>
+                    )}
+                  </div>
+                  <div className="text-xs sm:text-sm text-[#606978] mt-0.5">
+                    <span className="font-semibold text-[#171B26]">{exp.company}</span> • {exp.employmentType} ({exp.workMode})
+                  </div>
+                </div>
+                <span className="text-xs font-mono text-[#606978] shrink-0 sm:pt-1">
+                  {exp.period}
+                </span>
+              </div>
+
+              {/* Training and Progression Badges */}
+              <div className="flex flex-wrap gap-2 text-xs font-mono pt-1">
+                <span className="inline-flex items-center px-2.5 py-1 rounded bg-[#EEF2F8] border border-[#E2E6EE] text-[#171B26]">
+                  Probation / Training: {exp.probationPeriod}
+                </span>
+                <span className="inline-flex items-center px-2.5 py-1 rounded bg-[#EEF2F8] border border-[#E2E6EE] text-[#606978]">
+                  Progression: Post-confirmation Software Developer
+                </span>
+              </div>
+
+              <p className="text-xs sm:text-sm text-[#606978] leading-relaxed pt-1">
+                {exp.description}
+              </p>
+            </div>
           ))}
         </div>
       </section>

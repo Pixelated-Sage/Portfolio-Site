@@ -1,8 +1,22 @@
+export interface ExperienceItem {
+  company: string;
+  role: string;
+  employmentType: string;
+  workMode: string;
+  period: string;
+  startDate: string;
+  probationPeriod: string;
+  progression: string;
+  description: string;
+  current: boolean;
+}
+
 export interface ProfileData {
   name: string;
   tagline: string;
   role: string;
   location: string;
+  experience: ExperienceItem[];
   education: {
     degree: string;
     institution: string;
@@ -45,6 +59,21 @@ export const profileData: ProfileData = {
   role: "Software Engineer — Backend & Systems",
   tagline: "Building software. Understanding the systems beneath it.",
   location: "Punjab, India",
+  experience: [
+    {
+      company: "lotasol Technologies Private Limited",
+      role: "Software Trainee",
+      employmentType: "Full-time",
+      workMode: "On-site",
+      period: "2 November 2026 – Present",
+      startDate: "2 November 2026",
+      probationPeriod: "12 months",
+      progression: "Following successful confirmation after the probation period, the offer letter specifies progression to Software Developer.",
+      description:
+        "Started my professional engineering journey at lotasol Technologies Private Limited as a Software Trainee. Currently undergoing a 12-month probation period, with a focus on learning, professional development and contributing within an engineering team. Upon successful confirmation, the role progresses to Software Developer.",
+      current: true,
+    },
+  ],
   education: {
     degree: "B.Tech in Computer Science Engineering",
     institution: "Swami Vivekananda Institute of Engineering & Technology (SVIET)",
