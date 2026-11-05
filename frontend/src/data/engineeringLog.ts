@@ -26,6 +26,35 @@ export interface EngineeringEntry {
 
 export const engineeringLogData: EngineeringEntry[] = [
   {
+    "id": "day-23",
+    "slug": "day-23-deterministic-test-setup",
+    "dayNumber": 23,
+    "date": "2026-11-04",
+    "title": "Day 23: Deterministic Test Setup and Isolation with PostgreSQL",
+    "topic": "Backend Architecture",
+    "status": "completed",
+    "summary": "Built a deterministic test suite for Express and PostgreSQL featuring strict test isolation, dedicated test database routing (engineering_lab_test), in-memory/database test factories, and automated lifecycle hooks (beforeEach truncation and afterAll pool termination).",
+    "keyTakeaway": "Isolating test cases with dedicated test environments and data factories eliminates cross-test coupling and guarantees reproducible CI runs.",
+    "details": [
+      "Dedicated Test Database: Routed tests to engineering_lab_test with an upfront assertion on current_database() to prevent accidental truncation of live application data.",
+      "Lifecycle Hooks & Teardown: Enforced beforeEach table truncation (TRUNCATE TABLE users CASCADE) to ensure zero state leakage between tests, and afterAll connection pool termination.",
+      "Object & Database Test Factories: Implemented makeUserPayload (smart defaults generator) and createUserInDb (direct PostgreSQL seeder) to streamline test fixture creation.",
+      "Decoupled Test Execution: Refactored the duplicate user (HTTP 422) test to seed prerequisites independently using the database factory rather than depending on the success of prior creation tests."
+    ],
+    "codeSnippet": {
+      "language": "javascript",
+      "code": "describe(\"POST /users\", () => {\n  beforeEach(async () => {\n    const result = await pool.query(\"SELECT current_database();\");\n    const dbName = result.rows[0].current_database;\n    if (dbName !== \"engineering_lab_test\") {\n      throw new Error(`unsafe test database: ${dbName}`);\n    }\n    await pool.query(\"TRUNCATE TABLE users CASCADE;\");\n  });\n});",
+      "caption": "Database safety check and deterministic table truncation in beforeEach (app.api.test.js)"
+    },
+    "evidenceCommit": {
+      "hash": "1edf821",
+      "date": "2026-11-04",
+      "message": "deterministic test setup (learned properly how to make proper structured test cases for the backend code)",
+      "url": "https://github.com/Pixelated-Sage/abhishek-engineering-labs/commit/1edf8213290185f5856b75a921bcdeec9a684814"
+    },
+    "repoPath": "backend/day-23-Deterministic-Test-Setup"
+  },
+  {
     "id": "day-22",
     "slug": "day-22-automated-api-testing",
     "dayNumber": 22,

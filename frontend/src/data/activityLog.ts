@@ -12,6 +12,17 @@ export interface ActivityRecord {
 
 export const activityRecords: ActivityRecord[] = [
   {
+    "date": "2026-11-04",
+    "title": "Day 23: Deterministic Test Setup and Isolation with PostgreSQL",
+    "topic": "Backend Architecture",
+    "commitHash": "1edf821",
+    "commitMessage": "deterministic test setup (learned properly how to make proper structured test cases for the backend code)",
+    "commitUrl": "https://github.com/Pixelated-Sage/abhishek-engineering-labs/commit/1edf8213290185f5856b75a921bcdeec9a684814",
+    "exercisePath": "backend/day-23-Deterministic-Test-Setup",
+    "status": "verified",
+    "summary": "Configured deterministic test setup with PostgreSQL: database isolation guards, test factories, table truncation in beforeEach, and 7 automated tests passing."
+  },
+  {
     "date": "2026-11-03",
     "title": "Day 22: Automated API Integration Testing with Vitest and Supertest",
     "topic": "Backend Architecture",
@@ -260,6 +271,12 @@ export function computeStreakStats(): StreakStats {
 }
 
 export const recentMilestones = [
+  {
+    date: "Nov 4, 2026",
+    title: "Day 23: Deterministic Test Setup and Isolation with PostgreSQL",
+    summary: "Configured deterministic test setup with PostgreSQL: database isolation guards, test factories, table truncation in beforeEach, and 7 automated tests passing.",
+    exercise: "backend/day-23-Deterministic-Test-Setup",
+  },
   {
     date: "Nov 3, 2026",
     title: "Day 22: Automated API Integration Testing with Vitest and Supertest",
