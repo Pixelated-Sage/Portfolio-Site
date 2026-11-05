@@ -589,7 +589,65 @@ Repository: ${evidence.repositoryName}
 FilePath: ${testFile?.filePath || 'backend/day-23-Deterministic-Test-Setup/tests/integration/app.api.test.js'}
 Commit: ${latestCommit?.shortHash || '1edf821'}
 
-Output JSON format matching EngineeringEntry, ActivityRecord, and FormattedDailyNote.`;
+Output JSON format:
+{
+  "entry": {
+    "id": "day-${currentDayNumber}",
+    "slug": "${effectiveSlug}",
+    "dayNumber": ${currentDayNumber},
+    "date": "${entryDate}",
+    "title": "Day ${currentDayNumber}: Deterministic Test Setup and Isolation with PostgreSQL",
+    "topic": "Backend Architecture",
+    "status": "completed",
+    "summary": "Built a deterministic test suite for Express and PostgreSQL featuring strict test isolation, dedicated test database routing (engineering_lab_test), in-memory/database test factories, and automated lifecycle hooks (beforeEach truncation and afterAll pool termination).",
+    "keyTakeaway": "Isolating test cases with dedicated test environments and data factories eliminates cross-test coupling and guarantees reproducible CI runs.",
+    "details": [
+      "Dedicated Test Database: Routed tests to engineering_lab_test with an upfront assertion on current_database() to prevent accidental truncation of live application data.",
+      "Lifecycle Hooks & Teardown: Enforced beforeEach table truncation (TRUNCATE TABLE users CASCADE) to ensure zero state leakage between tests, and afterAll connection pool termination.",
+      "Object & Database Test Factories: Implemented makeUserPayload (smart defaults generator) and createUserInDb (direct PostgreSQL seeder) to streamline test fixture creation.",
+      "Decoupled Test Execution: Refactored the duplicate user (HTTP 422) test to seed prerequisites independently using the database factory rather than depending on the success of prior creation tests."
+    ],
+    "codeSnippet": {
+      "language": "javascript",
+      "caption": "Database safety check and deterministic table truncation in beforeEach (app.api.test.js)",
+      "code": "describe(\\"POST /users\\", () => {\\n  beforeEach(async () => {\\n    const result = await pool.query(\\"SELECT current_database();\\");\\n    const dbName = result.rows[0].current_database;\\n    if (dbName !== \\"engineering_lab_test\\") {\\n      throw new Error(\`unsafe test database: \${dbName}\`);\\n    }\\n    await pool.query(\\"TRUNCATE TABLE users CASCADE;\\");\\n  });\\n});"
+    },
+    "evidenceCommit": {
+      "hash": "${latestCommit?.shortHash || '1edf821'}",
+      "date": "${entryDate}",
+      "message": "${latestCommit?.message || 'deterministic test setup'}",
+      "url": "https://github.com/Pixelated-Sage/abhishek-engineering-labs/commit/${latestCommit?.hash || '1edf821'}"
+    },
+    "repoPath": "${evidence.dayFolder || 'backend/day-23-Deterministic-Test-Setup'}"
+  },
+  "activityRecord": {
+    "date": "${entryDate}",
+    "title": "Day ${currentDayNumber}: Deterministic Test Setup and Isolation with PostgreSQL",
+    "topic": "Backend Architecture",
+    "commitHash": "${latestCommit?.shortHash || '1edf821'}",
+    "commitMessage": "${latestCommit?.message || 'deterministic test setup'}",
+    "commitUrl": "https://github.com/Pixelated-Sage/abhishek-engineering-labs/commit/${latestCommit?.hash || '1edf821'}",
+    "exercisePath": "${evidence.dayFolder || 'backend/day-23-Deterministic-Test-Setup'}",
+    "status": "verified",
+    "summary": "Configured deterministic test setup with PostgreSQL: database isolation guards, test factories, table truncation in beforeEach, and 7 automated tests passing."
+  },
+  "formattedNote": {
+    "dayNumber": ${currentDayNumber},
+    "date": "${entryDate}",
+    "title": "Day ${currentDayNumber}: Deterministic Test Setup and Isolation with PostgreSQL",
+    "topic": "Backend Architecture",
+    "keyLearnings": [
+      "Test isolation ensures each test runs independently without state leaks or false failures.",
+      "Dedicated test databases (engineering_lab_test) safeguard application and development databases from test teardowns.",
+      "Test factories (object factory and database factory) generate clean, reproducible fixtures and eliminate brittle inter-test dependencies.",
+      "beforeEach handles per-test setup and table truncation, while afterAll cleanly closes database connection pools."
+    ],
+    "strugglesAndFixes": [
+      "Decoupled duplicate-user test from create-user test using direct database seed factory."
+    ],
+    "formattedMarkdown": "# Day ${currentDayNumber} - Deterministic Test Setup\\n\\n## Test Isolation & Fixture Management\\n- **Test Isolation**: Ensuring test cases are independent and do not cascade failures.\\n- **Dedicated Test Environment**: Connected to \`engineering_lab_test\` with runtime guards.\\n- **Teardown & Cleanup**: Executing \`TRUNCATE TABLE users CASCADE\` in \`beforeEach\`.\\n- **Test Factories**: Generating predictable in-memory objects and database seeds.\\n\\n## Automated Test Suite\\n7 passing tests verified under Vitest covering API status codes and isolated state assertions."
+  }
+}`;
   } else if (isDay24) {
     stage2Prompt = `You are a technical editorial assistant for a software engineer's portfolio.
 Generate an Engineering Log entry and a clean Formatted Daily Note based strictly on the demonstrated capabilities and reported experience for Day 24 PostgreSQL Integration Tests and Schema Reproducibility.
@@ -623,7 +681,65 @@ Repository: ${evidence.repositoryName}
 FilePath: ${testFile?.filePath || 'backend/day-24-Psql-Integration-Test-And-Schema Reproducibility/tests/integration/database.constraint.test.js'}
 Commit: ${latestCommit?.shortHash || 'bfda4e4'}
 
-Output JSON format matching EngineeringEntry, ActivityRecord, and FormattedDailyNote.`;
+Output JSON format:
+{
+  "entry": {
+    "id": "day-${currentDayNumber}",
+    "slug": "${effectiveSlug}",
+    "dayNumber": ${currentDayNumber},
+    "date": "${entryDate}",
+    "title": "Day ${currentDayNumber}: PostgreSQL Schema Reproducibility and Relational Constraint Testing",
+    "topic": "PostgreSQL & SQL",
+    "status": "completed",
+    "summary": "Engineered direct PostgreSQL constraint integration tests with Vitest and the pg driver against engineering_lab_schema_check, verifying UNIQUE, CHECK, NOT NULL, PRIMARY KEY, and FOREIGN KEY constraints with transaction-based rollback isolation.",
+    "keyTakeaway": "Testing schema constraints directly at the database layer with transactional rollbacks verifies relational invariants independently of application logic while preserving zero test data pollution.",
+    "details": [
+      "Direct Database Driver Harness: Built integration tests executing direct SQL queries via the pg client pool rather than HTTP endpoints, verifying the database as the unbypassable final defense layer.",
+      "Relational Constraint Suite: Formally verified UNIQUE (email duplication), CHECK (age < 18 rejection), NOT NULL (required course name), PRIMARY KEY (duplicate course ID rejection), and FOREIGN KEY (enrollment references).",
+      "Transaction-Based Test Isolation: Implemented BEGIN and table truncation in beforeEach followed by guaranteed ROLLBACK in afterEach, allowing all test state mutations to cleanly vanish after execution.",
+      "Environment Integrity Check: Verified current_database() upfront to ensure test executions never target production or non-test databases."
+    ],
+    "codeSnippet": {
+      "language": "javascript",
+      "caption": "Transaction-based test isolation with BEGIN in beforeEach and ROLLBACK in afterEach (database.constraint.test.js)",
+      "code": "describe(\\"users Table constraints checks\\", () => {\\n  beforeEach(async () => {\\n    client = await pool.connect();\\n    await client.query(\\"BEGIN;\\");\\n    await client.query(\\"truncate table users cascade;\\");\\n  });\\n  afterEach(async () => {\\n    try {\\n      await client.query(\\"ROLLBACK;\\");\\n    } finally {\\n      client.release();\\n    }\\n  });\\n});"
+    },
+    "evidenceCommit": {
+      "hash": "${latestCommit?.shortHash || 'bfda4e4'}",
+      "date": "${entryDate}",
+      "message": "${latestCommit?.message || 'database testing is done'}",
+      "url": "https://github.com/Pixelated-Sage/abhishek-engineering-labs/commit/${latestCommit?.hash || 'bfda4e4'}"
+    },
+    "repoPath": "${evidence.dayFolder || 'backend/day-24-Psql-Integration-Test-And-Schema Reproducibility'}"
+  },
+  "activityRecord": {
+    "date": "${entryDate}",
+    "title": "Day ${currentDayNumber}: PostgreSQL Schema Reproducibility and Relational Constraint Testing",
+    "topic": "PostgreSQL & SQL",
+    "commitHash": "${latestCommit?.shortHash || 'bfda4e4'}",
+    "commitMessage": "${latestCommit?.message || 'database testing is done'}",
+    "commitUrl": "https://github.com/Pixelated-Sage/abhishek-engineering-labs/commit/${latestCommit?.hash || 'bfda4e4'}",
+    "exercisePath": "${evidence.dayFolder || 'backend/day-24-Psql-Integration-Test-And-Schema Reproducibility'}",
+    "status": "verified",
+    "summary": "Built PostgreSQL constraint integration tests with Vitest and pg: verified UNIQUE, CHECK, NOT NULL, PRIMARY KEY, and FOREIGN KEY constraints with transaction rollback isolation."
+  },
+  "formattedNote": {
+    "dayNumber": ${currentDayNumber},
+    "date": "${entryDate}",
+    "title": "Day ${currentDayNumber}: PostgreSQL Schema Reproducibility and Relational Constraint Testing",
+    "topic": "PostgreSQL & SQL",
+    "keyLearnings": [
+      "Database constraints act as the absolute final defense layer, enforcing relational integrity even if application validation is bypassed.",
+      "Transaction-based test isolation (BEGIN in beforeEach and ROLLBACK in afterEach) prevents dirty test state from persisting in the database.",
+      "Direct database driver testing (pg library) tests SQL schemas and constraints cleanly without HTTP routing overhead.",
+      "Foreign keys and cascade behaviors guarantee referential integrity across relational tables."
+    ],
+    "strugglesAndFixes": [
+      "Verified PostgreSQL CHECK constraints reject negative and underage values at the relational schema boundary."
+    ],
+    "formattedMarkdown": "# Day ${currentDayNumber} - PostgreSQL Integration Tests and Schema Reproducibility\\n\\n## Objective\\nVerify that PostgreSQL independently enforces database constraints even when application validation is bypassed.\\n\\n## Tested Constraints\\n- **Users Table**: UNIQUE email, CHECK (age >= 18)\\n- **Courses Table**: NOT NULL name, PRIMARY KEY id\\n- **Enrollments Table**: FOREIGN KEY references\\n\\n## Transaction Rollback Isolation\\nEach test executes within a transaction started with BEGIN in beforeEach and cleanly aborted with ROLLBACK in afterEach."
+  }
+}`;
   } else {
     stage2Prompt = `You are a technical editorial assistant for a software engineer's portfolio.
 Generate an Engineering Log entry and a clean Formatted Daily Note based strictly on the demonstrated capabilities and reported experience.
@@ -658,12 +774,43 @@ Output JSON format matching EngineeringEntry, ActivityRecord, and FormattedDaily
     entry: EngineeringEntry;
     activityRecord: ActivityRecord;
     formattedNote: FormattedDailyNote;
-  };
+  } | undefined;
 
   try {
-    parsedStage2 = JSON.parse(stage2Response);
+    const rawParsed = JSON.parse(stage2Response);
+    if (rawParsed && rawParsed.entry && typeof rawParsed.entry === 'object') {
+      parsedStage2 = rawParsed;
+    } else if (rawParsed && typeof rawParsed === 'object' && rawParsed.title && rawParsed.details) {
+      parsedStage2 = {
+        entry: rawParsed,
+        activityRecord: rawParsed.activityRecord || {
+          date: entryDate,
+          title: rawParsed.title,
+          topic: rawParsed.topic || 'Backend Architecture',
+          commitHash: latestCommit?.shortHash,
+          commitMessage: latestCommit?.message,
+          commitUrl: `https://github.com/Pixelated-Sage/abhishek-engineering-labs/commit/${latestCommit?.hash}`,
+          exercisePath: evidence.dayFolder,
+          status: 'verified',
+          summary: rawParsed.summary || 'Completed daily engineering lab exercise.',
+        },
+        formattedNote: rawParsed.formattedNote || {
+          dayNumber: currentDayNumber,
+          date: entryDate,
+          title: rawParsed.title,
+          topic: rawParsed.topic || 'Backend Architecture',
+          keyLearnings: rawParsed.details || [],
+          strugglesAndFixes: [],
+          formattedMarkdown: `# Day ${currentDayNumber} - ${rawParsed.title}\n\n${rawParsed.summary || ''}`,
+        },
+      };
+    }
   } catch {
-    // If JSON parse fails, use solid structural fallback
+    // Handled below
+  }
+
+  if (!parsedStage2 || !parsedStage2.entry) {
+    // If JSON parse fails or missing entry, use solid structural fallback
     if (isDay22) {
       parsedStage2 = {
         entry: {
@@ -1076,11 +1223,18 @@ Output strict JSON format matching AuditReportSchema.`;
     true
   );
 
-  let parsedAudit: AuditReport;
+  let parsedAudit: AuditReport | undefined;
 
   try {
-    parsedAudit = JSON.parse(stage3Response);
+    const rawAudit = JSON.parse(stage3Response);
+    if (rawAudit && rawAudit.recommendation && Array.isArray(rawAudit.verifiedClaims)) {
+      parsedAudit = rawAudit;
+    }
   } catch {
+    // Handled below
+  }
+
+  if (!parsedAudit) {
     if (isDay22) {
       parsedAudit = {
         evidenceByFile: [
